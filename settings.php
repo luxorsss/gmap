@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'save_all') {
         // 1. Simpan General & OneSender Settings
         $apiKey = trim($_POST['google_api_key'] ?? '');
+        $crmApiKey = trim($_POST['crm_api_key'] ?? '');
         $scraperUrl = trim($_POST['scraper_worker_url'] ?? 'http://127.0.0.1:3123');
         $scraperToken = trim($_POST['scraper_secret_token'] ?? '');
         $oneSenderUrl = trim($_POST['onesender_api_url'] ?? 'http://localhost:3001/api/v1');
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $batchDelay = (int)($_POST['batch_delay_seconds'] ?? 3);
 
         saveSetting('google_api_key', $apiKey);
+        saveSetting('crm_api_key', $crmApiKey);
         saveSetting('scraper_worker_url', $scraperUrl);
         saveSetting('scraper_secret_token', $scraperToken);
         saveSetting('onesender_api_url', $oneSenderUrl);
@@ -101,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Ambil nilai setting saat ini
 $apiKey = getSetting('google_api_key', '');
+$crmApiKey = getSetting('crm_api_key', '');
 $scraperWorkerUrl = getSetting('scraper_worker_url', 'http://127.0.0.1:3123');
 $scraperSecretToken = getSetting('scraper_secret_token', '');
 $oneSenderUrl = getSetting('onesender_api_url', 'http://localhost:3001/api/v1');
@@ -282,63 +285,73 @@ require_once __DIR__ . '/views/header.php';
             </div>
         </div>
 
-        <!-- Scraper Worker Node.js (Puppeteer) Section -->
+        <!-- API Integrasi Scraper Eksternal (cPanel Inbound API) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-6 space-y-5">
             <div class="flex items-start justify-between">
                 <div>
                     <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-                        <span class="p-1.5 bg-indigo-50 border border-indigo-200 text-indigo-600 rounded-lg text-base">🤖</span>
-                        Scraper Worker Engine (Puppeteer di Laptop / Local)
+                        <span class="p-1.5 bg-indigo-50 border border-indigo-200 text-indigo-600 rounded-lg text-base">🔑</span>
+                        API Integrasi Scraper Desktop / Lokal
                     </h2>
                     <p class="text-xs text-slate-500 mt-1">
-                        Hubungkan ke worker Node.js di laptop Anda (via Cloudflare Tunnel / Ngrok) agar scraping gratis Google Maps berjalan tanpa membebani server cPanel.
+                        Gunakan API Key ini di aplikasi <strong>MapLeads Scraper (Lokal)</strong> agar hasil scrape dapat otomatis di-push masuk ke cPanel tanpa Cloudflare Tunnel.
                     </p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="testScraperConnection()" id="btn-test-scraper" class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-semibold transition">
-                        <span>⚡</span> Test Koneksi Scraper
-                    </button>
                 </div>
             </div>
 
-            <div id="test-scraper-box" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+            <?php
+                $apiBaseUrl = $protocol . $host . rtrim(dirname($_SERVER['REQUEST_URI'] ?? ''), '/');
+                $importApiUrl = $apiBaseUrl . '/api/import_leads.php';
+                $groupsApiUrl = $apiBaseUrl . '/api/groups.php';
+            ?>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-4">
                 <div>
-                    <label for="scraper_worker_url" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                        Worker URL (Endpoint Laptop / Server)
+                    <label for="crm_api_key" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        CRM API Key (Kunci Akses Inbound)
                     </label>
-                    <input 
-                        type="text" 
-                        id="scraper_worker_url" 
-                        name="scraper_worker_url" 
-                        value="<?= htmlspecialchars($scraperWorkerUrl) ?>" 
-                        placeholder="http://127.0.0.1:3123 atau https://xxxx.trycloudflare.com" 
-                        class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
-                    >
+                    <div class="flex items-center gap-2">
+                        <input 
+                            type="text" 
+                            id="crm_api_key" 
+                            name="crm_api_key" 
+                            value="<?= htmlspecialchars($crmApiKey) ?>" 
+                            placeholder="Contoh: mls_sec_<?= bin2hex(random_bytes(8)) ?>" 
+                            class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
+                        >
+                        <button 
+                            type="button" 
+                            onclick="generateApiKey()" 
+                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200"
+                        >
+                            🎲 Generate Baru
+                        </button>
+                    </div>
                     <span class="text-[11px] text-slate-500 mt-1 block font-medium">
-                        Lokal: <code class="text-slate-700 bg-slate-100 px-1 py-0.5 rounded">http://127.0.0.1:3123</code> | cPanel: masukkan URL <strong>Cloudflare Tunnel / Ngrok</strong> laptop Anda.
+                        Masukkan kunci ini ke file <code>.env</code> atau Pengaturan di aplikasi Scraper Lokal Anda.
                     </span>
                 </div>
 
-                <div>
-                    <label for="scraper_secret_token" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
-                        API Secret Token (Opsional)
-                    </label>
-                    <input 
-                        type="password" 
-                        id="scraper_secret_token" 
-                        name="scraper_secret_token" 
-                        value="<?= htmlspecialchars($scraperSecretToken) ?>" 
-                        placeholder="Kunci rahasia (opsional)" 
-                        class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
-                    >
-                    <span class="text-[11px] text-slate-500 mt-1 block font-medium">
-                        Keamanan ekstra jika worker di laptop dibuka ke publik via Tunnel.
-                    </span>
+                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
+                    <div class="font-bold text-slate-700 flex items-center gap-1.5">
+                        <span>📡</span> Endpoint Inbound Tersedia:
+                    </div>
+                    <div class="font-mono text-[11px] text-slate-600 space-y-1">
+                        <div><strong class="text-emerald-700">POST</strong> <?= htmlspecialchars($importApiUrl) ?> <span class="text-slate-400">(Import Leads)</span></div>
+                        <div><strong class="text-sky-700">GET</strong> <?= htmlspecialchars($groupsApiUrl) ?> <span class="text-slate-400">(Daftar Grup)</span></div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script>
+        function generateApiKey() {
+            const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('crm_api_key').value = 'mls_key_' + randomPart;
+            window.toast && window.toast.success('API Key baru digenerate! Klik Simpan Pengaturan di bawah.');
+        }
+        </script>
 
         <!-- Google Places API Section (Opsional) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-6 space-y-4">
@@ -657,50 +670,7 @@ function testConnection() {
     });
 }
 
-function testScraperConnection() {
-    const btn = document.getElementById('btn-test-scraper');
-    const resultBox = document.getElementById('test-scraper-box');
-    const workerUrl = document.getElementById('scraper_worker_url').value;
-    const token = document.getElementById('scraper_secret_token').value;
 
-    btn.disabled = true;
-    btn.innerHTML = '<span>⏳</span> Menguji...';
-    resultBox.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200', 'bg-rose-50', 'text-rose-800', 'border-rose-200', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
-    resultBox.classList.add('bg-slate-50', 'text-slate-700', 'border', 'border-slate-200');
-    resultBox.textContent = 'Menghubungi endpoint ' + workerUrl + '...';
-
-    const formData = new FormData();
-    formData.append('worker_url', workerUrl);
-    formData.append('token', token);
-
-    fetch('actions/test_scraper.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-        btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Test Koneksi Scraper';
-        resultBox.classList.remove('bg-slate-50', 'text-slate-700');
-        if (data.success) {
-            resultBox.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
-            resultBox.innerHTML = '<strong>✅ Terhubung!</strong> ' + (data.message || 'Scraper worker laptop aktif.');
-            window.toast.success('Koneksi Scraper worker berhasil terhubung!');
-        } else {
-            resultBox.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
-            resultBox.innerHTML = '<strong>⚠️ Perhatian:</strong> ' + (data.message || 'Gagal menghubungi Scraper worker.');
-            window.toast.error('Gagal terhubung ke Scraper worker');
-        }
-    })
-    .catch(err => {
-        btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Test Koneksi Scraper';
-        resultBox.classList.remove('bg-slate-50', 'text-slate-700');
-        resultBox.classList.add('bg-rose-50', 'text-rose-800', 'border', 'border-rose-200');
-        resultBox.innerHTML = '<strong>❌ Error:</strong> ' + err.message;
-        window.toast.error('Kesalahan koneksi: ' + err.message);
-    });
-}
 
 function copyCronUrl() {
     const input = document.getElementById('cron_url_input');

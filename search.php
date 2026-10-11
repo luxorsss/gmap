@@ -141,6 +141,24 @@ require_once __DIR__ . '/views/header.php';
         </div>
     </div>
 
+    <!-- Info Scraper Banner -->
+    <div class="bg-indigo-50 border border-indigo-200/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-start gap-3">
+            <span class="p-2 bg-indigo-100 text-indigo-700 rounded-xl text-lg flex-shrink-0">🚀</span>
+            <div>
+                <h3 class="text-xs font-bold text-indigo-950 uppercase tracking-wider">
+                    Direkomendasikan: Gunakan MapLeads Scraper (Lokal)
+                </h3>
+                <p class="text-xs text-indigo-800 mt-0.5 leading-relaxed">
+                    Untuk shared hosting cPanel, gunakan project <strong>MapLeads Scraper</strong> di laptop/lokal agar proses scraping Google Maps super cepat, anti-timeout, dan hasil otomatis tersinkronisasi ke sini via Inbound API.
+                </p>
+            </div>
+        </div>
+        <a href="settings.php" class="btn-press px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-sm whitespace-nowrap self-stretch sm:self-auto text-center">
+            Lihat API Key ↗
+        </a>
+    </div>
+
     <!-- Search Form Card -->
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-4 sm:p-6">
         <form method="GET" action="search.php" class="space-y-4 sm:space-y-5" id="searchForm">
