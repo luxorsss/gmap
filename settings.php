@@ -179,8 +179,8 @@ require_once __DIR__ . '/views/header.php';
         <input type="hidden" name="target_group_id" value="<?= $selectedGroupId ?? '' ?>">
 
         <!-- OneSender WhatsApp Gateway Section -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-6 space-y-5">
-            <div class="flex items-start justify-between">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-4 sm:p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div>
                     <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
                         <span class="p-1.5 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-lg text-base">📱</span>
@@ -188,8 +188,8 @@ require_once __DIR__ . '/views/header.php';
                     </h2>
                     <p class="text-xs text-slate-500 mt-1">Hubungkan server OneSender lokal / remote untuk mengirim pesan massal dan follow-up otomatis.</p>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="testConnection()" id="btn-test-conn" class="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-semibold transition">
+                <div class="flex items-center gap-2 self-start sm:self-auto">
+                    <button type="button" onclick="testConnection()" id="btn-test-conn" class="btn-press inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-semibold transition" style="min-height: 44px;">
                         <span>⚡</span> Test Koneksi OneSender
                     </button>
                 </div>
@@ -297,7 +297,7 @@ require_once __DIR__ . '/views/header.php';
         </div>
 
         <!-- API Integrasi Scraper Eksternal (cPanel Inbound API) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-6 space-y-5">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-4 sm:p-6 space-y-5">
             <div class="flex items-start justify-between">
                 <div>
                     <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
@@ -321,40 +321,46 @@ require_once __DIR__ . '/views/header.php';
                     <label for="crm_api_key" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
                         CRM API Key (Kunci Akses Inbound)
                     </label>
-                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <div class="space-y-2">
                         <input 
                             type="text" 
                             id="crm_api_key" 
                             name="crm_api_key" 
                             value="<?= htmlspecialchars($crmApiKey) ?>" 
                             placeholder="Contoh: mls_key_xxxxxxxxxxxxxxxx" 
-                            class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
+                            class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
+                            style="min-height: 44px;"
                         >
-                        <button 
-                            type="button" 
-                            onclick="generateApiKey()" 
-                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 whitespace-nowrap"
-                        >
-                            🎲 Generate
-                        </button>
-                        <button 
-                            type="button" 
-                            onclick="saveApiKeyInstant()" 
-                            id="btnSaveKeyInstant"
-                            class="btn-press px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-sm whitespace-nowrap"
-                        >
-                            💾 Simpan Kunci
-                        </button>
-                        <button 
-                            type="button" 
-                            onclick="copyApiKeyInstant()" 
-                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 whitespace-nowrap"
-                        >
-                            📋 Salin
-                        </button>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button 
+                                type="button" 
+                                onclick="generateApiKey()" 
+                                class="btn-press py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 text-center flex items-center justify-center gap-1"
+                                style="min-height: 44px;"
+                            >
+                                <span>🎲</span> Generate
+                            </button>
+                            <button 
+                                type="button" 
+                                onclick="saveApiKeyInstant()" 
+                                id="btnSaveKeyInstant"
+                                class="btn-press py-2.5 px-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-sm text-center flex items-center justify-center gap-1"
+                                style="min-height: 44px;"
+                            >
+                                <span>💾</span> Simpan
+                            </button>
+                            <button 
+                                type="button" 
+                                onclick="copyApiKeyInstant()" 
+                                class="btn-press py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 text-center flex items-center justify-center gap-1"
+                                style="min-height: 44px;"
+                            >
+                                <span>📋</span> Salin
+                            </button>
+                        </div>
                     </div>
                     <span class="text-[11px] text-slate-500 mt-1.5 block font-medium">
-                        Klik <strong>"Simpan Kunci"</strong> agar API key langsung tersimpan ke database tanpa perlu submit form template di bawah.
+                        Klik <strong>"Simpan"</strong> agar API key langsung tersimpan ke database tanpa perlu submit form template di bawah.
                     </span>
                 </div>
 
@@ -362,9 +368,9 @@ require_once __DIR__ . '/views/header.php';
                     <div class="font-bold text-slate-700 flex items-center gap-1.5">
                         <span>📡</span> Endpoint Inbound Tersedia:
                     </div>
-                    <div class="font-mono text-[11px] text-slate-600 space-y-1">
-                        <div><strong class="text-emerald-700">POST</strong> <?= htmlspecialchars($importApiUrl) ?> <span class="text-slate-400">(Import Leads)</span></div>
-                        <div><strong class="text-sky-700">GET</strong> <?= htmlspecialchars($groupsApiUrl) ?> <span class="text-slate-400">(Daftar Grup)</span></div>
+                    <div class="font-mono text-[11px] text-slate-600 space-y-1 overflow-x-auto break-all">
+                        <div><strong class="text-emerald-700">POST</strong> <?= htmlspecialchars($importApiUrl) ?> <span class="text-slate-400 text-[10px]">(Import Leads)</span></div>
+                        <div><strong class="text-sky-700">GET</strong> <?= htmlspecialchars($groupsApiUrl) ?> <span class="text-slate-400 text-[10px]">(Daftar Grup)</span></div>
                     </div>
                 </div>
             </div>
@@ -446,7 +452,7 @@ require_once __DIR__ . '/views/header.php';
         </div>
 
         <!-- Drip Message Templates Section (5 Steps Per Group) -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-6 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-4 sm:p-6 space-y-5 sm:space-y-6">
             
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                 <div>
@@ -458,12 +464,13 @@ require_once __DIR__ . '/views/header.php';
                 </div>
 
                 <!-- Group Selector Dropdown -->
-                <div class="flex items-center gap-2">
-                    <label class="text-xs font-bold text-slate-600 whitespace-nowrap">Target Grup:</label>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider sm:text-xs sm:text-slate-600 whitespace-nowrap">Target Grup:</label>
                     <select 
                         id="target_group_selector" 
                         onchange="switchGroup(this.value)" 
-                        class="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 outline-none"
+                        class="w-full sm:w-auto px-3.5 py-2.5 sm:py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-800 focus:bg-white focus:border-emerald-600 outline-none"
+                        style="min-height: 44px;"
                     >
                         <option value="" <?= $selectedGroupId === null ? 'selected' : '' ?>>⚙️ Template Default (Semua Grup)</option>
                         <?php foreach ($groups as $g): ?>
@@ -481,22 +488,22 @@ require_once __DIR__ . '/views/header.php';
                 </div>
             <?php endif; ?>
 
-            <!-- Tab Langkah Pesan (Segmented Control adhering to Emil Kowalski motion) -->
-            <div class="flex flex-wrap p-1 rounded-xl bg-slate-100 border border-slate-200/80 gap-1">
-                <button type="button" onclick="showStepTab(1)" id="tab-btn-1" class="step-tab-btn btn-press px-3.5 py-2 text-xs font-bold rounded-lg transition bg-white text-slate-900 shadow-sm border border-slate-200">
+            <!-- Tab Langkah Pesan (Segmented Control with Touch-friendly Scroll) -->
+            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-100 border border-slate-200/80 gap-1" style="-webkit-overflow-scrolling: touch;">
+                <button type="button" onclick="showStepTab(1)" id="tab-btn-1" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-bold rounded-lg transition bg-white text-slate-900 shadow-sm border border-slate-200 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
                     1️⃣ Pesan 1 (Kirim Grup)
                 </button>
-                <button type="button" onclick="showStepTab(2)" id="tab-btn-2" class="step-tab-btn btn-press px-3.5 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
+                <button type="button" onclick="showStepTab(2)" id="tab-btn-2" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
                     2️⃣ Pesan 2 (Solusi)
                 </button>
-                <button type="button" onclick="showStepTab(3)" id="tab-btn-3" class="step-tab-btn btn-press px-3.5 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
+                <button type="button" onclick="showStepTab(3)" id="tab-btn-3" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
                     3️⃣ Pesan 3 (CTA Portofolio)
                 </button>
-                <button type="button" onclick="showStepTab(4)" id="tab-btn-4" class="step-tab-btn btn-press px-3.5 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
-                    4️⃣ Follow-up 1 (Otomatis)
+                <button type="button" onclick="showStepTab(4)" id="tab-btn-4" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
+                    4️⃣ Follow-up 1
                 </button>
-                <button type="button" onclick="showStepTab(5)" id="tab-btn-5" class="step-tab-btn btn-press px-3.5 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60">
-                    5️⃣ Follow-up 2 (Otomatis)
+                <button type="button" onclick="showStepTab(5)" id="tab-btn-5" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
+                    5️⃣ Follow-up 2
                 </button>
             </div>
 
@@ -606,10 +613,10 @@ require_once __DIR__ . '/views/header.php';
 
         </div>
 
-        <div class="flex justify-end pt-2">
-            <button type="submit" class="btn-press inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+        <div class="flex flex-col sm:flex-row justify-end pt-2 pb-6">
+            <button type="submit" class="btn-press w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-xs shadow-md shadow-emerald-600/20 transition" style="min-height: 48px;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Simpan Semua Pengaturan &amp; Template
+                <span>Simpan Semua Pengaturan &amp; Template</span>
             </button>
         </div>
 
