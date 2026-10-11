@@ -1,0 +1,73 @@
+<?php
+// config/database.php.example
+// Salin file ini menjadi 'config/database.php' dan sesuaikan kredensial database Anda
+
+define('DB_HOST', getenv('DB_HOST') ?: '127.0.0.1');
+define('DB_NAME', getenv('DB_NAME') ?: 'gmaps_leads');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_PORT', (int)(getenv('DB_PORT') ?: 3306));
+
+function getDb(): PDO {
+    static $pdo = null;
+    if ($pdo === null) {
+        $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => true,
+        ];
+        try {
+            $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+        } catch (PDOException $e) {
+            die("Koneksi Database Gagal: " . htmlspecialchars($e->getMessage()));
+        }
+    }
+    return $pdo;
+}
+
+function getSetting(string $key, string $default = ''): string {
+    $db = getDb();
+    $stmt = $db->prepare("SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1");
+    $stmt->execute([$key]);
+    $res = $stmt->fetch();
+    return $res ? (string)$res['setting_value'] : $default;
+}
+
+function saveSetting(string $key, string $value): bool {
+    $db = getDb();
+    $stmt = $db->prepare("
+        INSERT INTO settings (setting_key, setting_value) 
+        VALUES (?, ?) 
+        ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)
+    ");
+    return $stmt->execute([$key, $value]);
+}
+
+function getAllGroups(): array {
+    $db = getDb();
+    return $db->query("
+        SELECT g.id, g.name, g.color, COUNT(l.id) AS total_leads
+        FROM lead_groups g
+        LEFT JOIN leads l ON l.group_id = g.id
+        GROUP BY g.id, g.name, g.color
+        ORDER BY g.name ASC
+    ")->fetchAll();
+}
+
+function getOrCreateGroup(string $name): ?int {
+    $name = trim($name);
+    if ($name === '') return null;
+    $db = getDb();
+    $stmt = $db->prepare("SELECT id FROM lead_groups WHERE name = ? LIMIT 1");
+    $stmt->execute([$name]);
+    $id = $stmt->fetchColumn();
+    if ($id) return (int)$id;
+
+    $colors = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+    $color = $colors[array_rand($colors)];
+
+    $insert = $db->prepare("INSERT INTO lead_groups (name, color) VALUES (?, ?)");
+    $insert->execute([$name, $color]);
+    return (int)$db->lastInsertId();
+}

@@ -1,0 +1,14 @@
+{
+  "name": "gmaps-leads",
+  "version": "1.0.0",
+  "description": "**Google Maps Lead Scraper & WhatsApp Outreach Mini-CRM**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer": "^25.13.0"
+  }
+}

@@ -1,0 +1,40 @@
+# Dependencies (Node / Puppeteer)
+node_modules/
+package-lock.json
+
+# Puppeteer Cache & Browser Binaries (Sangat besar, ~300MB - 500MB)
+.cache/
+.puppeteer/
+
+# Konfigurasi Kredensial Database Lokal (Gunakan config/database.php.example sebagai template)
+config/database.php
+
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+
+# Logs (File log scraping & cron follow-up)
+logs/
+*.log
+
+# Exported CSV / Excel data (Data prospek klien Anda)
+*.csv
+*.xlsx
+*.xls
+exports/
+
+# File Sistem Operasi & Editor IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files & Dump
+*.tmp
+*.bak
+*.sql.gz
+*.sql.zip
