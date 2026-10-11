@@ -18,6 +18,17 @@ $selectedGroupId = isset($_GET['group_id']) && $_GET['group_id'] !== '' ? (int)$
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? 'save_all';
 
+    if ($action === 'save_crm_api_key') {
+        $crmApiKey = trim($_POST['crm_api_key'] ?? '');
+        if (empty($crmApiKey)) {
+            $crmApiKey = 'mls_key_' . bin2hex(random_bytes(16));
+        }
+        saveSetting('crm_api_key', $crmApiKey);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true, 'api_key' => $crmApiKey, 'message' => 'CRM API Key berhasil disimpan!']);
+        exit;
+    }
+
     if ($action === 'save_all') {
         // 1. Simpan General & OneSender Settings
         $apiKey = trim($_POST['google_api_key'] ?? '');
@@ -310,25 +321,40 @@ require_once __DIR__ . '/views/header.php';
                     <label for="crm_api_key" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
                         CRM API Key (Kunci Akses Inbound)
                     </label>
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <input 
                             type="text" 
                             id="crm_api_key" 
                             name="crm_api_key" 
                             value="<?= htmlspecialchars($crmApiKey) ?>" 
-                            placeholder="Contoh: mls_sec_<?= bin2hex(random_bytes(8)) ?>" 
+                            placeholder="Contoh: mls_key_xxxxxxxxxxxxxxxx" 
                             class="flex-1 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
                         >
                         <button 
                             type="button" 
                             onclick="generateApiKey()" 
-                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200"
+                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 whitespace-nowrap"
                         >
-                            🎲 Generate Baru
+                            🎲 Generate
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="saveApiKeyInstant()" 
+                            id="btnSaveKeyInstant"
+                            class="btn-press px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-sm whitespace-nowrap"
+                        >
+                            💾 Simpan Kunci
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="copyApiKeyInstant()" 
+                            class="btn-press px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 whitespace-nowrap"
+                        >
+                            📋 Salin
                         </button>
                     </div>
-                    <span class="text-[11px] text-slate-500 mt-1 block font-medium">
-                        Masukkan kunci ini ke file <code>.env</code> atau Pengaturan di aplikasi Scraper Lokal Anda.
+                    <span class="text-[11px] text-slate-500 mt-1.5 block font-medium">
+                        Klik <strong>"Simpan Kunci"</strong> agar API key langsung tersimpan ke database tanpa perlu submit form template di bawah.
                     </span>
                 </div>
 
@@ -349,7 +375,48 @@ require_once __DIR__ . '/views/header.php';
             const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(16)))
                 .map(b => b.toString(16).padStart(2, '0')).join('');
             document.getElementById('crm_api_key').value = 'mls_key_' + randomPart;
-            window.toast && window.toast.success('API Key baru digenerate! Klik Simpan Pengaturan di bawah.');
+            window.toast && window.toast.info('API Key baru digenerate! Klik "Simpan Kunci" untuk menyimpan permanen.');
+        }
+
+        async function saveApiKeyInstant() {
+            const btn = document.getElementById('btnSaveKeyInstant');
+            const key = document.getElementById('crm_api_key').value.trim();
+            btn.disabled = true;
+            btn.textContent = 'Menyimpan...';
+
+            const formData = new FormData();
+            formData.append('action', 'save_crm_api_key');
+            formData.append('crm_api_key', key);
+
+            try {
+                const res = await fetch('settings.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('crm_api_key').value = data.api_key;
+                    window.toast ? window.toast.success('✅ API Key berhasil disimpan permanen ke database!') : alert('API Key berhasil disimpan!');
+                } else {
+                    window.toast ? window.toast.error('Gagal menyimpan API Key.') : alert('Gagal.');
+                }
+            } catch (e) {
+                window.toast ? window.toast.error('Error: ' + e.message) : alert('Error: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '💾 Simpan Kunci';
+            }
+        }
+
+        function copyApiKeyInstant() {
+            const input = document.getElementById('crm_api_key');
+            if (!input.value) {
+                window.toast && window.toast.error('Belum ada API Key untuk disalin.');
+                return;
+            }
+            navigator.clipboard.writeText(input.value).then(() => {
+                window.toast && window.toast.success('API Key berhasil disalin ke clipboard!');
+            });
         }
         </script>
 

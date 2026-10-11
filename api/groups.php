@@ -15,22 +15,25 @@ require_once __DIR__ . '/../config/database.php';
 
 // Validasi API Key
 $configuredApiKey = getSetting('crm_api_key', '');
-if (!empty($configuredApiKey)) {
-    $providedKey = $_SERVER['HTTP_X_API_KEY'] ?? ($_GET['api_key'] ?? '');
-    if (empty($providedKey) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
-            $providedKey = trim($matches[1]);
-        }
-    }
+if (empty($configuredApiKey)) {
+    $configuredApiKey = 'mls_key_' . bin2hex(random_bytes(16));
+    saveSetting('crm_api_key', $configuredApiKey);
+}
 
-    if ($providedKey !== $configuredApiKey) {
-        http_response_code(401);
-        echo json_encode([
-            'success' => false,
-            'error'   => 'Unauthorized: API Key tidak valid atau belum diisi.'
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
+$providedKey = $_SERVER['HTTP_X_API_KEY'] ?? ($_GET['api_key'] ?? '');
+if (empty($providedKey) && isset($_SERVER['HTTP_AUTHORIZATION'])) {
+    if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
+        $providedKey = trim($matches[1]);
     }
+}
+
+if ($providedKey !== $configuredApiKey) {
+    http_response_code(401);
+    echo json_encode([
+        'success' => false,
+        'error'   => 'Unauthorized: API Key salah atau belum diisi.'
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 try {
