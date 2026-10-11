@@ -81,3 +81,4 @@ Untuk mengotomasi pengiriman pesan follow-up menggunakan layanan cron job pihak 
    - **File Log Bulanan**: Tersimpan otomatis di folder `logs/followup_YYYY-MM.log`.
    - **Mode Debug / Force**: Anda dapat menambahkan parameter `?force=1` di URL (misal: `/cron/followup_scheduler.php?force=1`) untuk menguji eksekusi antrean di luar jam kerja.
    - **Trigger Manual**: Tetap dapat dieksekusi instan kapan saja lewat tombol **⚡ Jalankan FU** di dashboard web.
+# gmap
