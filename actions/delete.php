@@ -21,6 +21,9 @@ if ($id <= 0) {
 }
 
 $db = getDb();
+try {
+    $db->prepare("DELETE FROM lead_message_logs WHERE lead_id = ?")->execute([$id]);
+} catch (Throwable $e) {}
 $stmt = $db->prepare("DELETE FROM leads WHERE id = ?");
 $stmt->execute([$id]);
 

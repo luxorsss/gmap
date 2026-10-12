@@ -75,6 +75,43 @@
                                             </span>
                                         <?php endif; ?>
                                     </div>
+
+                                    <?php if (!empty($lead['last_incoming_message'])): ?>
+                                        <div class="mt-2 p-2 rounded-xl bg-amber-50/90 border border-amber-200/90 text-slate-800 text-[11px] shadow-2xs max-w-sm">
+                                            <div class="flex items-center justify-between gap-1 text-[10px] text-amber-800 font-semibold mb-0.5">
+                                                <span class="flex items-center gap-1">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                                    <span>Balasan Klien</span>
+                                                </span>
+                                                <?php if (!empty($lead['last_incoming_at'])): ?>
+                                                    <span class="text-[9px] text-slate-400 font-mono"><?= date('H:i', strtotime($lead['last_incoming_at'])) ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="font-medium text-slate-900 italic line-clamp-2" title="<?= htmlspecialchars($lead['last_incoming_message']) ?>">
+                                                "<?= htmlspecialchars($lead['last_incoming_message']) ?>"
+                                            </div>
+                                            <?php if ((int)$lead['last_step_sent'] === 1 && $lead['status'] === 'dihubungi'): ?>
+                                                <div class="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-amber-200/70">
+                                                    <button 
+                                                        type="button" 
+                                                        onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
+                                                        class="btn-press px-2 py-0.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] inline-flex items-center gap-1 transition shadow-xs"
+                                                        title="Jadikan kata kunci trigger dan otomatis kirim Pesan 2"
+                                                    >
+                                                        <span>⚡</span> + Jadikan Trigger
+                                                    </button>
+                                                    <button 
+                                                        type="button" 
+                                                        onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
+                                                        class="btn-press px-2 py-0.5 rounded-md bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-[10px] inline-flex items-center gap-1 transition"
+                                                        title="Kirim Pesan 2 langsung manual"
+                                                    >
+                                                        <span>▶</span> Kirim Pesan 2
+                                                    </button>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
 
                                 <!-- Grup Prospek Dropdown (hidden on small tablet) -->
@@ -298,6 +335,41 @@
                                 </span>
                             </div>
                         </div>
+
+                        <?php if (!empty($lead['last_incoming_message'])): ?>
+                            <div class="p-2.5 rounded-xl bg-amber-50/90 border border-amber-200/90 text-slate-800 text-xs shadow-2xs">
+                                <div class="flex items-center justify-between gap-1 text-[11px] text-amber-800 font-semibold mb-1">
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        <span>Balasan Klien</span>
+                                    </span>
+                                    <?php if (!empty($lead['last_incoming_at'])): ?>
+                                        <span class="text-[10px] text-slate-400 font-mono"><?= date('H:i', strtotime($lead['last_incoming_at'])) ?></span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="font-medium text-slate-900 italic text-[11px]" title="<?= htmlspecialchars($lead['last_incoming_message']) ?>">
+                                    "<?= htmlspecialchars($lead['last_incoming_message']) ?>"
+                                </div>
+                                <?php if ((int)$lead['last_step_sent'] === 1 && $lead['status'] === 'dihubungi'): ?>
+                                    <div class="flex items-center gap-2 mt-2 pt-2 border-t border-amber-200/70">
+                                        <button 
+                                            type="button" 
+                                            onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
+                                            class="btn-press flex-1 py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs inline-flex items-center justify-center gap-1 transition shadow-xs"
+                                        >
+                                            <span>⚡</span> + Jadikan Trigger
+                                        </button>
+                                        <button 
+                                            type="button" 
+                                            onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
+                                            class="btn-press py-1 px-3 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-xs inline-flex items-center justify-center gap-1 transition"
+                                        >
+                                            <span>▶</span> Kirim Pesan 2
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
 
                         <!-- Status & Group Controls: Side by side on mobile -->
                         <div class="grid grid-cols-2 gap-2">

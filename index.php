@@ -371,6 +371,40 @@ require_once __DIR__ . '/views/header.php';
     </div>
 </div>
 
+<!-- Modal Jadikan Trigger Kata Kunci Pesan 2 -->
+<div id="addTriggerModal" onclick="if(event.target === this) closeAddTriggerModal()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 animate-modal-in mx-2">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm font-bold">⚡</span>
+                <h3 class="text-base font-bold text-slate-900 tracking-tight">Jadikan Trigger Pesan 2</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                Kata kunci ini akan disimpan ke pengaturan sistem. Jika ada klien membalas dengan kata ini, sistem akan otomatis mengirim <strong>Pesan 2</strong>.
+            </p>
+        </div>
+
+        <input type="hidden" id="triggerLeadId">
+        
+        <div class="space-y-1.5">
+            <label class="block text-xs font-semibold text-slate-700">Teks Balasan Klien:</label>
+            <div id="triggerOriginalMsg" class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 italic break-words max-h-24 overflow-y-auto"></div>
+        </div>
+
+        <div class="space-y-1.5">
+            <label for="triggerKeywordInput" class="block text-xs font-semibold text-slate-700">Kata Kunci Trigger (Bisa disesuaikan):</label>
+            <input type="text" id="triggerKeywordInput" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 text-xs text-slate-900 placeholder-slate-400 outline-none transition font-medium" placeholder="Contoh: minat, iya mau, info lanjut">
+            <p class="text-[11px] text-slate-500">Pencocokan bersifat mengandung kata (case-insensitive).</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
+            <button type="button" onclick="closeAddTriggerModal()" class="btn-press px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 order-3 sm:order-1">Batal</button>
+            <button type="button" id="btnSaveTriggerOnly" onclick="submitAddTrigger(false)" class="btn-press px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 order-2 sm:order-2">Simpan Saja</button>
+            <button type="button" id="btnSaveTriggerAndSend" onclick="submitAddTrigger(true)" class="btn-press px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm order-1 sm:order-3">Simpan & Kirim Pesan 2</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // 1. Eksekusi Kirim Pesan Step-by-Step
 function sendStepMessage(leadId, stepNumber) {
@@ -607,12 +641,81 @@ function closeNoteModal() {
     }
 }
 
+// 7b. Modal Trigger Kata Kunci Pesan 2
+function openAddTriggerModal(leadId, messageText) {
+    document.getElementById('triggerLeadId').value = leadId || '';
+    document.getElementById('triggerOriginalMsg').textContent = `"${messageText}"`;
+    document.getElementById('triggerKeywordInput').value = (messageText || '').trim();
+    document.getElementById('addTriggerModal').classList.remove('hidden');
+    setTimeout(() => {
+        const inp = document.getElementById('triggerKeywordInput');
+        if (inp) {
+            inp.focus();
+            inp.select();
+        }
+    }, 50);
+}
+
+function closeAddTriggerModal() {
+    document.getElementById('addTriggerModal').classList.add('hidden');
+}
+
+function submitAddTrigger(sendNow) {
+    const leadId = document.getElementById('triggerLeadId').value;
+    const keyword = document.getElementById('triggerKeywordInput').value.trim();
+    if (!keyword) {
+        window.toast.error('Masukkan kata kunci terlebih dahulu.');
+        return;
+    }
+
+    const btn = sendNow ? document.getElementById('btnSaveTriggerAndSend') : document.getElementById('btnSaveTriggerOnly');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> Memproses...';
+
+    const params = new URLSearchParams();
+    params.append('keyword', keyword);
+    if (sendNow && leadId) {
+        params.append('lead_id', leadId);
+    }
+
+    fetch('actions/add_trigger_keyword.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        if (data.success) {
+            closeAddTriggerModal();
+            window.toast.success(data.message || 'Trigger kata kunci berhasil disimpan.');
+            if (sendNow && leadId) {
+                // Refresh daftar prospek
+                fetchFilteredLeads(1);
+            }
+        } else {
+            window.toast.error('Gagal: ' + (data.message || 'Terjadi kesalahan'));
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        window.toast.error('Kesalahan jaringan: ' + err.message);
+    });
+}
+
 // Global Escape listener for accessible modal closing (R-32)
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        const modal = document.getElementById('noteModal');
-        if (modal && !modal.classList.contains('hidden')) {
+        const noteModal = document.getElementById('noteModal');
+        if (noteModal && !noteModal.classList.contains('hidden')) {
             closeNoteModal();
+        }
+        const triggerModal = document.getElementById('addTriggerModal');
+        if (triggerModal && !triggerModal.classList.contains('hidden')) {
+            closeAddTriggerModal();
         }
     }
 });

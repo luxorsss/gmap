@@ -23,7 +23,7 @@ if ($id <= 0 || !in_array($status, $validStatuses, true)) {
 
 $db = getDb();
 
-// Jika status diubah jadi deal atau batal, batalkan antrean follow up otomatis
+// Jika status diubah jadi deal atau batal, batalkan antrean follow up otomatis & bersihkan log pesan masuk
 $clearFu = in_array($status, ['deal', 'batal']);
 
 if ($notes !== null) {
@@ -32,7 +32,9 @@ if ($notes !== null) {
         SET status = :status, 
             notes = :notes,
             last_contacted_at = IF(:status_check != 'belum_dihubungi' AND last_contacted_at IS NULL, NOW(), last_contacted_at),
-            next_followup_at = IF(:clear_fu = 1, NULL, next_followup_at)
+            next_followup_at = IF(:clear_fu = 1, NULL, next_followup_at),
+            last_incoming_message = IF(:clear_fu = 1, NULL, last_incoming_message),
+            last_incoming_at = IF(:clear_fu = 1, NULL, last_incoming_at)
         WHERE id = :id
     ");
     $stmt->execute([
@@ -47,7 +49,9 @@ if ($notes !== null) {
         UPDATE leads 
         SET status = :status,
             last_contacted_at = IF(:status_check != 'belum_dihubungi' AND last_contacted_at IS NULL, NOW(), last_contacted_at),
-            next_followup_at = IF(:clear_fu = 1, NULL, next_followup_at)
+            next_followup_at = IF(:clear_fu = 1, NULL, next_followup_at),
+            last_incoming_message = IF(:clear_fu = 1, NULL, last_incoming_message),
+            last_incoming_at = IF(:clear_fu = 1, NULL, last_incoming_at)
         WHERE id = :id
     ");
     $stmt->execute([
@@ -56,6 +60,14 @@ if ($notes !== null) {
         ':clear_fu'     => $clearFu ? 1 : 0,
         ':id'           => $id
     ]);
+}
+
+// Bersihkan riwayat pesan dari lead_message_logs agar database tetap ramping
+if ($clearFu) {
+    try {
+        $delLogStmt = $db->prepare("DELETE FROM lead_message_logs WHERE lead_id = ?");
+        $delLogStmt->execute([$id]);
+    } catch (Throwable $e) {}
 }
 
 echo json_encode(['success' => true]);

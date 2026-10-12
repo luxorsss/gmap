@@ -51,6 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         saveSetting('drip_send_end_hour', (string)$endHour);
         saveSetting('batch_delay_seconds', (string)$batchDelay);
 
+        $autoReplyStep2Enabled = isset($_POST['auto_reply_step2_enabled']) ? '1' : '0';
+        $autoReplyStep2Keywords = trim($_POST['auto_reply_step2_keywords'] ?? 'iya, ya, betul, benar, siap, siapa, dengan saya, ada apa, boleh, lanjut, waalaikumsalam, halo, silakan, minat, bisa');
+        saveSetting('auto_reply_step2_enabled', $autoReplyStep2Enabled);
+        saveSetting('auto_reply_step2_keywords', $autoReplyStep2Keywords);
+
         // 2. Simpan Templates untuk group yang dipilih
         $targetGroupId = !empty($_POST['target_group_id']) ? (int)$_POST['target_group_id'] : null;
 
@@ -122,6 +127,8 @@ $oneSenderToken = getSetting('onesender_token', '');
 $dripStartHour = (int)getSetting('drip_send_start_hour', '8');
 $dripEndHour = (int)getSetting('drip_send_end_hour', '17');
 $batchDelaySeconds = (int)getSetting('batch_delay_seconds', '3');
+$autoReplyStep2Enabled = getSetting('auto_reply_step2_enabled', '1');
+$autoReplyStep2Keywords = getSetting('auto_reply_step2_keywords', 'iya, ya, betul, benar, siap, siapa, dengan saya, ada apa, boleh, lanjut, waalaikumsalam, halo, silakan, minat, bisa');
 
 // Ambil template untuk grup yang dipilih (atau default jika NULL)
 $oneSenderService = new OneSenderService($pdo);
@@ -291,6 +298,78 @@ require_once __DIR__ . '/views/header.php';
                         >
                             Salin URL
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Webhook OneSender & Auto-Reply Pesan 2 -->
+            <?php
+                $webhookUrl = $protocol . $host . rtrim(dirname($_SERVER['REQUEST_URI'] ?? ''), '/') . '/actions/webhook_onesender.php';
+            ?>
+            <div class="pt-4 border-t border-slate-100 space-y-4">
+                <div class="bg-emerald-50/60 border border-emerald-200/80 rounded-xl p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                            <span>⚡</span> Webhook Masuk OneSender (Pesan Masuk Klien)
+                        </span>
+                        <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            Inbound Webhook
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Pasang URL ini di dashboard <strong>OneSender &gt; Webhook &gt; Inbound Message</strong> agar setiap balasan klien dapat terbaca oleh sistem secara instan.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <input 
+                            type="text" 
+                            id="webhook_url_input" 
+                            readonly 
+                            value="<?= htmlspecialchars($webhookUrl) ?>" 
+                            class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700 select-all outline-none truncate"
+                        >
+                        <button 
+                            type="button" 
+                            onclick="copyWebhookUrl()" 
+                            id="btn-copy-webhook"
+                            class="btn-press px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition shadow-sm whitespace-nowrap"
+                        >
+                            Salin URL Webhook
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-1">
+                    <div class="flex items-start gap-3">
+                        <input 
+                            type="checkbox" 
+                            id="auto_reply_step2_enabled" 
+                            name="auto_reply_step2_enabled" 
+                            value="1" 
+                            <?= $autoReplyStep2Enabled === '1' ? 'checked' : '' ?>
+                            class="w-4 h-4 mt-0.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer"
+                        >
+                        <label for="auto_reply_step2_enabled" class="cursor-pointer select-none">
+                            <span class="text-xs font-bold text-slate-800 block">Kirim Otomatis Pesan 2 Saat Klien Membalas</span>
+                            <span class="text-xs text-slate-500 block mt-0.5">
+                                Jika prospek yang baru menerima Pesan 1 (status Dihubungi) membalas dengan kata kunci yang cocok, sistem akan seketika mengirim Pesan 2.
+                            </span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label for="auto_reply_step2_keywords" class="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">
+                            Kata Kunci Trigger Pesan 2 (Pisahkan dengan koma)
+                        </label>
+                        <textarea 
+                            id="auto_reply_step2_keywords" 
+                            name="auto_reply_step2_keywords" 
+                            rows="2" 
+                            class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 text-xs font-medium text-slate-900 placeholder-slate-400 outline-none transition"
+                            placeholder="iya, ya, betul, benar, siap, siapa, dengan saya, ada apa, boleh, lanjut, minat"
+                        ><?= htmlspecialchars($autoReplyStep2Keywords) ?></textarea>
+                        <p class="text-[11px] text-slate-500 mt-1">
+                            Pencocokan bersifat tidak sensitif huruf besar/kecil (case-insensitive). Anda juga dapat menambahkan kata kunci baru secara instan langsung dari tabel prospek dengan tombol <strong>[+ Jadikan Trigger]</strong>.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -760,6 +839,23 @@ function copyCronUrl() {
         window.toast.success('URL Cron Job berhasil disalin!');
         btn.textContent = 'Tersalin! ✓';
         setTimeout(() => { btn.textContent = 'Salin URL'; }, 2000);
+    });
+}
+
+function copyWebhookUrl() {
+    const input = document.getElementById('webhook_url_input');
+    const btn = document.getElementById('btn-copy-webhook');
+    input.select();
+    input.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(input.value).then(() => {
+        window.toast.success('URL Webhook berhasil disalin!');
+        btn.textContent = 'Tersalin! ✓';
+        setTimeout(() => { btn.textContent = 'Salin URL Webhook'; }, 2000);
+    }).catch(() => {
+        document.execCommand('copy');
+        window.toast.success('URL Webhook berhasil disalin!');
+        btn.textContent = 'Tersalin! ✓';
+        setTimeout(() => { btn.textContent = 'Salin URL Webhook'; }, 2000);
     });
 }
 </script>

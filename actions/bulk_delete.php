@@ -33,6 +33,10 @@ if (empty($ids)) {
 try {
     $db = getDb();
     $inQuery = implode(',', array_fill(0, count($ids), '?'));
+    try {
+        $stmtLogs = $db->prepare("DELETE FROM lead_message_logs WHERE lead_id IN ($inQuery)");
+        $stmtLogs->execute(array_values($ids));
+    } catch (Throwable $e) {}
     $stmt = $db->prepare("DELETE FROM leads WHERE id IN ($inQuery)");
     $stmt->execute(array_values($ids));
     $deletedCount = $stmt->rowCount();
