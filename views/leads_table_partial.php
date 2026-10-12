@@ -90,7 +90,7 @@
                                             <div class="font-medium text-slate-900 italic line-clamp-2" title="<?= htmlspecialchars($lead['last_incoming_message']) ?>">
                                                 "<?= htmlspecialchars($lead['last_incoming_message']) ?>"
                                             </div>
-                                            <?php if ((int)$lead['last_step_sent'] === 1 && $lead['status'] === 'dihubungi'): ?>
+                                            <?php if ($lead['status'] === 'dihubungi'): ?>
                                                 <div class="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-amber-200/70">
                                                     <button 
                                                         type="button" 
@@ -100,14 +100,20 @@
                                                     >
                                                         <span>⚡</span> + Jadikan Trigger
                                                     </button>
-                                                    <button 
-                                                        type="button" 
-                                                        onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
-                                                        class="btn-press px-2 py-0.5 rounded-md bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-[10px] inline-flex items-center gap-1 transition"
-                                                        title="Kirim Pesan 2 langsung manual"
-                                                    >
-                                                        <span>▶</span> Kirim Pesan 2
-                                                    </button>
+                                                    <?php if ((int)$lead['last_step_sent'] === 1): ?>
+                                                        <button 
+                                                            type="button" 
+                                                            onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
+                                                            class="btn-press px-2 py-0.5 rounded-md bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-[10px] inline-flex items-center gap-1 transition"
+                                                            title="Kirim Pesan 2 langsung manual"
+                                                        >
+                                                            <span>▶</span> Kirim Pesan 2
+                                                        </button>
+                                                    <?php else: ?>
+                                                        <span class="text-[9px] font-semibold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded">
+                                                            ✓ Pesan 2 Terkirim
+                                                        </span>
+                                                    <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
@@ -350,7 +356,7 @@
                                 <div class="font-medium text-slate-900 italic text-[11px]" title="<?= htmlspecialchars($lead['last_incoming_message']) ?>">
                                     "<?= htmlspecialchars($lead['last_incoming_message']) ?>"
                                 </div>
-                                <?php if ((int)$lead['last_step_sent'] === 1 && $lead['status'] === 'dihubungi'): ?>
+                                <?php if ($lead['status'] === 'dihubungi'): ?>
                                     <div class="flex items-center gap-2 mt-2 pt-2 border-t border-amber-200/70">
                                         <button 
                                             type="button" 
@@ -359,13 +365,19 @@
                                         >
                                             <span>⚡</span> + Jadikan Trigger
                                         </button>
-                                        <button 
-                                            type="button" 
-                                            onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
-                                            class="btn-press py-1 px-3 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-xs inline-flex items-center justify-center gap-1 transition"
-                                        >
-                                            <span>▶</span> Kirim Pesan 2
-                                        </button>
+                                        <?php if ((int)$lead['last_step_sent'] === 1): ?>
+                                            <button 
+                                                type="button" 
+                                                onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
+                                                class="btn-press py-1 px-3 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-xs inline-flex items-center justify-center gap-1 transition"
+                                            >
+                                                <span>▶</span> Kirim Pesan 2
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-1 rounded-md">
+                                                ✓ Pesan 2 Terkirim
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
