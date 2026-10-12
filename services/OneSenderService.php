@@ -108,13 +108,32 @@ class OneSenderService {
      *   ]
      * @return array ['success' => bool, 'status_code' => int, 'response' => mixed, 'error' => ?string]
      */
-    public function sendMessages(array $messages): array {
-        if (empty($messages)) {
-            return ['success' => false, 'error' => 'Pesan kosong'];
+    /**
+     * Dapatkan endpoint pesan OneSender yang valid dan ternormalisasi
+     */
+    public function getMessagesEndpoint(): string {
+        $raw = rtrim($this->apiUrl, '/');
+        // Jika sudah diakhiri dengan /messages
+        if (preg_match('#/messages$#i', $raw)) {
+            return $raw;
         }
+        // Jika diakhiri dengan /api/v1
+        if (preg_match('#/api/v1$#i', $raw)) {
+            return $raw . '/messages';
+        }
+        // Jika mengandung /api/v1 di tengah
+        if (str_contains($raw, '/api/v1')) {
+            return $raw . '/messages';
+        }
+        // Jika hanya base domain misal http://localhost:3001
+        return $raw . '/api/v1/messages';
+    }
 
-        $endpoint = $this->apiUrl . '/messages';
-        $jsonPayload = json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    /**
+     * Eksekusi request POST ke OneSender dengan cURL aman (mendukung HTTPS redirect tanpa mengubah method)
+     */
+    private function executeRequest(string $endpoint, $payload): array {
+        $jsonPayload = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         $headers = [
             'Content-Type: application/json',
@@ -132,6 +151,8 @@ class OneSenderService {
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_TIMEOUT        => 30,
             CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_POSTREDIR      => defined('CURL_REDIR_POST_ALL') ? CURL_REDIR_POST_ALL : 3,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
         ]);
@@ -139,13 +160,14 @@ class OneSenderService {
         $rawResponse = curl_exec($ch);
         $curlError = curl_error($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $effectiveUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_close($ch);
 
         if ($curlError) {
             return [
                 'success'     => false,
                 'status_code' => $httpCode,
-                'error'       => 'Gagal terhubung ke OneSender: ' . $curlError,
+                'error'       => 'Gagal terhubung ke OneSender (' . $endpoint . '): ' . $curlError,
                 'response'    => null
             ];
         }
@@ -162,7 +184,14 @@ class OneSenderService {
             ];
         }
 
-        $errMsg = 'HTTP ' . $httpCode . ': ' . ($decoded['message'] ?? $rawResponse);
+        $serverMsg = '';
+        if (is_array($decoded)) {
+            $serverMsg = $decoded['message'] ?? ($decoded['error'] ?? ($decoded['detail'] ?? json_encode($decoded)));
+        } else {
+            $serverMsg = strip_tags(substr($rawResponse, 0, 250));
+        }
+
+        $errMsg = 'HTTP ' . $httpCode . ' pada endpoint [' . ($effectiveUrl ?: $endpoint) . ']: ' . ($serverMsg ?: 'Method Not Allowed / Error Server');
         return [
             'success'     => false,
             'status_code' => $httpCode,
@@ -172,7 +201,19 @@ class OneSenderService {
     }
 
     /**
-     * Kirim pesan tunggal ke 1 nomor
+     * Kirim kumpulan pesan bulk ke OneSender (POST /api/v1/messages)
+     */
+    public function sendMessages(array $messages): array {
+        if (empty($messages)) {
+            return ['success' => false, 'error' => 'Pesan kosong'];
+        }
+
+        $endpoint = $this->getMessagesEndpoint();
+        return $this->executeRequest($endpoint, $messages);
+    }
+
+    /**
+     * Kirim pesan tunggal ke 1 nomor (JSON Object sesuai standar OneSender API)
      */
     public function sendMessageSingle(string $phoneWa, string $message): array {
         $cleanPhone = self::normalizePhone($phoneWa);
@@ -181,17 +222,16 @@ class OneSenderService {
         }
 
         $payload = [
-            [
-                'recipient_type' => 'individual',
-                'to'             => $cleanPhone,
-                'type'           => 'text',
-                'text'           => [
-                    'body' => $message
-                ]
+            'recipient_type' => 'individual',
+            'to'             => $cleanPhone,
+            'type'           => 'text',
+            'text'           => [
+                'body' => $message
             ]
         ];
 
-        return $this->sendMessages($payload);
+        $endpoint = $this->getMessagesEndpoint();
+        return $this->executeRequest($endpoint, $payload);
     }
 
     /**
@@ -201,8 +241,14 @@ class OneSenderService {
         $url = rtrim($customUrl ?: $this->apiUrl, '/');
         $token = $customToken !== null ? $customToken : $this->token;
 
-        // Kita coba ping endpoint URL base atau messages
-        $endpoint = $url . '/messages';
+        $endpoint = $url;
+        if (!preg_match('#/messages$#i', $endpoint)) {
+            if (!str_contains($endpoint, '/api/v1')) {
+                $endpoint .= '/api/v1/messages';
+            } else {
+                $endpoint .= '/messages';
+            }
+        }
 
         $headers = [
             'Content-Type: application/json',
@@ -212,14 +258,16 @@ class OneSenderService {
             $headers[] = 'Authorization: Bearer ' . $token;
         }
 
-        // Test request dengan array kosong atau dummy
         $ch = curl_init($endpoint);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST  => 'OPTIONS', // atau GET jika didukung
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => json_encode(['test' => true]),
             CURLOPT_HTTPHEADER     => $headers,
-            CURLOPT_TIMEOUT        => 5,
-            CURLOPT_CONNECTTIMEOUT => 3,
+            CURLOPT_TIMEOUT        => 8,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_POSTREDIR      => defined('CURL_REDIR_POST_ALL') ? CURL_REDIR_POST_ALL : 3,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
         ]);
@@ -227,19 +275,28 @@ class OneSenderService {
         $raw = curl_exec($ch);
         $err = curl_error($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $effectiveUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_close($ch);
 
         if ($err) {
             return [
                 'connected' => false,
-                'message'   => 'Tidak dapat terhubung ke ' . $url . ' (' . $err . ')'
+                'message'   => 'Tidak dapat terhubung ke ' . $endpoint . ' (' . $err . ')'
+            ];
+        }
+
+        if ($httpCode >= 200 && $httpCode < 500) {
+            return [
+                'connected' => true,
+                'http_code' => $httpCode,
+                'message'   => 'Server OneSender merespons di ' . ($effectiveUrl ?: $endpoint) . ' (HTTP ' . $httpCode . ')'
             ];
         }
 
         return [
-            'connected' => true,
+            'connected' => false,
             'http_code' => $httpCode,
-            'message'   => 'Server OneSender merespons (HTTP ' . $httpCode . ')'
+            'message'   => 'Server OneSender merespons error HTTP ' . $httpCode . ' di ' . ($effectiveUrl ?: $endpoint)
         ];
     }
 }

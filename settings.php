@@ -312,9 +312,14 @@ require_once __DIR__ . '/views/header.php';
                         <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                             <span>⚡</span> Webhook Masuk OneSender (Pesan Masuk Klien)
                         </span>
-                        <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                            Inbound Webhook
-                        </span>
+                        <div class="flex items-center gap-2">
+                            <a href="test_webhook.php" class="btn-press text-xs text-emerald-700 hover:text-emerald-800 font-bold underline flex items-center gap-1">
+                                🧪 Buka Simulator ↗
+                            </a>
+                            <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                                Inbound Webhook
+                            </span>
+                        </div>
                     </div>
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Pasang URL ini di dashboard <strong>OneSender &gt; Webhook &gt; Inbound Message</strong> agar setiap balasan klien dapat terbaca oleh sistem secara instan.

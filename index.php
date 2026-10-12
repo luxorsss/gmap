@@ -88,6 +88,51 @@ $stmt = $db->prepare($sql);
 $stmt->execute($params);
 $leads = $stmt->fetchAll();
 
+function renderGroupBannerHtml($groupInfo, $uncontactedCount) {
+    if (!$groupInfo) return '';
+    ob_start();
+    ?>
+    <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-fade-in">
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white uppercase tracking-wider">
+                    Outreach Grup
+                </span>
+                <h2 class="text-base font-bold text-slate-900 flex items-center gap-1.5">
+                    <span>📁</span> <?= htmlspecialchars($groupInfo['name']) ?>
+                </h2>
+            </div>
+            <p class="text-xs text-slate-600">
+                Terdapat <strong class="text-emerald-700 font-mono font-bold"><?= $uncontactedCount ?></strong> prospek dengan status <span class="text-slate-900 font-semibold">Belum Dihubungi</span> di grup ini.
+            </p>
+        </div>
+
+        <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-emerald-200 w-full md:w-auto shadow-sm">
+            <span class="text-xs text-slate-600 pl-1 font-medium whitespace-nowrap">Kirim:</span>
+            <input 
+                type="number" 
+                id="batch-limit-input" 
+                min="1" 
+                max="<?= max(1, $uncontactedCount) ?>" 
+                value="<?= min(10, max(1, $uncontactedCount)) ?>" 
+                class="w-16 px-2 py-1.5 rounded-lg bg-slate-50 text-slate-900 text-xs font-mono font-bold text-center border border-slate-200 focus:border-emerald-600 focus:bg-white focus:outline-none"
+            >
+            <span class="text-xs text-slate-600 pr-1 font-medium whitespace-nowrap">kontak</span>
+            <button 
+                type="button" 
+                onclick="sendBatchMessage1(<?= $groupInfo['id'] ?>)" 
+                id="btn-batch-send"
+                <?= $uncontactedCount === 0 ? 'disabled' : '' ?>
+                class="btn-press flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition"
+            >
+                <span>🚀</span> Kirim Pesan 1 (Massal)
+            </button>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
 // Jika request adalah AJAX untuk Live Auto-Filter / Pagination
 if (!empty($_GET['ajax'])) {
     header('Content-Type: application/json; charset=utf-8');
@@ -97,6 +142,7 @@ if (!empty($_GET['ajax'])) {
     echo json_encode([
         'success'        => true,
         'html'           => $tableHtml,
+        'banner_html'    => renderGroupBannerHtml($activeGroupInfo, $activeGroupUncontacted),
         'total_filtered' => $totalFiltered,
         'page'           => $page,
         'total_pages'    => $totalPages,
@@ -200,46 +246,10 @@ require_once __DIR__ . '/views/header.php';
         </div>
     </div>
 
-    <!-- Outreach Banner Khusus Grup (Jika sedang filter grup) -->
-    <?php if ($activeGroupInfo): ?>
-        <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white uppercase tracking-wider">
-                        Outreach Grup
-                    </span>
-                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-1.5">
-                        <span>📁</span> <?= htmlspecialchars($activeGroupInfo['name']) ?>
-                    </h2>
-                </div>
-                <p class="text-xs text-slate-600">
-                    Terdapat <strong class="text-emerald-700 font-mono font-bold"><?= $activeGroupUncontacted ?></strong> prospek dengan status <span class="text-slate-900 font-semibold">Belum Dihubungi</span> di grup ini.
-                </p>
-            </div>
-
-            <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-emerald-200 w-full md:w-auto shadow-sm">
-                <span class="text-xs text-slate-600 pl-1 font-medium whitespace-nowrap">Kirim:</span>
-                <input 
-                    type="number" 
-                    id="batch-limit-input" 
-                    min="1" 
-                    max="<?= max(1, $activeGroupUncontacted) ?>" 
-                    value="<?= min(10, max(1, $activeGroupUncontacted)) ?>" 
-                    class="w-16 px-2 py-1.5 rounded-lg bg-slate-50 text-slate-900 text-xs font-mono font-bold text-center border border-slate-200 focus:border-emerald-600 focus:bg-white focus:outline-none"
-                >
-                <span class="text-xs text-slate-600 pr-1 font-medium whitespace-nowrap">kontak</span>
-                <button 
-                    type="button" 
-                    onclick="sendBatchMessage1(<?= $activeGroupInfo['id'] ?>)" 
-                    id="btn-batch-send"
-                    <?= $activeGroupUncontacted === 0 ? 'disabled' : '' ?>
-                    class="btn-press flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition"
-                >
-                    <span>🚀</span> Kirim Pesan 1 (Massal)
-                </button>
-            </div>
-        </div>
-    <?php endif; ?>
+    <!-- Container Outreach Banner Grup Dinamis -->
+    <div id="groupBannerContainer">
+        <?= renderGroupBannerHtml($activeGroupInfo, $activeGroupUncontacted) ?>
+    </div>
 
     <!-- Filter & Action Bar: Collapsible and Fluid on Mobile -->
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-3.5 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
@@ -320,6 +330,19 @@ require_once __DIR__ . '/views/header.php';
 
         <!-- Right Action Buttons -->
         <div class="flex items-center gap-2 w-full md:w-auto justify-between sm:justify-end border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-100">
+            <!-- Tombol Kirim Pesan 1 Massal untuk prospek yang dicentang -->
+            <button 
+                type="button" 
+                id="bulkSendBtn"
+                onclick="executeBulkSendMessage1()"
+                class="hidden btn-press inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+                title="Kirim Pesan 1 ke prospek terpilih yang belum dihubungi"
+            >
+                <span>🚀</span>
+                Kirim Pesan 1 (<span id="selectedSendCount">0</span>)
+            </button>
+
+            <!-- Tombol Hapus prospek yang dicentang -->
             <button 
                 type="button" 
                 id="bulkDeleteBtn"
@@ -769,15 +792,27 @@ function updateBulkUI() {
     document.querySelectorAll('.lead-checkbox:checked').forEach(cb => checkedIds.add(cb.value));
     const count = checkedIds.size;
     const bulkBtn = document.getElementById('bulkDeleteBtn');
+    const bulkSendBtn = document.getElementById('bulkSendBtn');
     const countSpan = document.getElementById('selectedCount');
+    const sendCountSpan = document.getElementById('selectedSendCount');
     const master = document.getElementById('selectAllCheckbox');
 
     if (countSpan) countSpan.textContent = count;
+    if (sendCountSpan) sendCountSpan.textContent = count;
+
     if (bulkBtn) {
         if (count > 0) {
             bulkBtn.classList.remove('hidden');
         } else {
             bulkBtn.classList.add('hidden');
+        }
+    }
+
+    if (bulkSendBtn) {
+        if (count > 0) {
+            bulkSendBtn.classList.remove('hidden');
+        } else {
+            bulkSendBtn.classList.add('hidden');
         }
     }
 
@@ -787,6 +822,48 @@ function updateBulkUI() {
         master.checked = count === allIds.size;
         master.indeterminate = count > 0 && count < allIds.size;
     }
+}
+
+function executeBulkSendMessage1() {
+    const checkedBoxes = document.querySelectorAll('.lead-checkbox:checked');
+    const checkedIds = Array.from(new Set(Array.from(checkedBoxes).map(cb => cb.value)));
+    if (checkedIds.length === 0) return;
+
+    if (!confirm(`Kirim Pesan 1 ke ${checkedIds.length} prospek terpilih via OneSender?`)) {
+        return;
+    }
+
+    const btn = document.getElementById('bulkSendBtn');
+    const origHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳</span> Mengirim...';
+
+    const formData = new URLSearchParams();
+    checkedIds.forEach(id => formData.append('ids[]', id));
+
+    fetch('actions/send_batch_selected.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        if (data.success) {
+            window.toast.success(data.message || 'Pesan 1 berhasil dikirim!');
+            setTimeout(() => {
+                fetchFilteredLeads(1);
+            }, 800);
+        } else {
+            window.toast.error('Gagal: ' + (data.error || 'Terjadi kesalahan'));
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+        window.toast.error('Kesalahan jaringan: ' + err.message);
+    });
 }
 
 function executeBulkDelete() {
@@ -922,6 +999,10 @@ function fetchFilteredLeads(page = 1, updateUrl = true) {
     .then(data => {
         if (data.success && leadsContainer) {
             leadsContainer.innerHTML = data.html;
+            const bannerContainer = document.getElementById('groupBannerContainer');
+            if (bannerContainer && typeof data.banner_html !== 'undefined') {
+                bannerContainer.innerHTML = data.banner_html;
+            }
             updateBulkUI();
         }
     })
