@@ -95,23 +95,25 @@
                                                     <button 
                                                         type="button" 
                                                         onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
-                                                        class="btn-press px-2 py-0.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] inline-flex items-center gap-1 transition shadow-xs"
+                                                        class="btn-press px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-[11px] inline-flex items-center gap-1 transition shadow-2xs"
                                                         title="Jadikan kata kunci trigger dan otomatis kirim Pesan 2"
                                                     >
-                                                        <span>⚡</span> + Jadikan Trigger
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                        <span>+ Jadikan Trigger</span>
                                                     </button>
                                                     <?php if ((int)$lead['last_step_sent'] === 1): ?>
                                                         <button 
                                                             type="button" 
                                                             onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
-                                                            class="btn-press px-2 py-0.5 rounded-md bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-[10px] inline-flex items-center gap-1 transition"
+                                                            class="btn-press px-2.5 py-1 rounded-lg bg-white hover:bg-amber-50 border border-amber-300 text-amber-900 font-semibold text-[11px] inline-flex items-center gap-1 transition shadow-2xs"
                                                             title="Kirim Pesan 2 langsung manual"
                                                         >
-                                                            <span>▶</span> Kirim Pesan 2
+                                                            <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                                            <span>Kirim Pesan 2</span>
                                                         </button>
                                                     <?php else: ?>
-                                                        <span class="text-[9px] font-semibold text-emerald-700 bg-emerald-100/80 px-1.5 py-0.5 rounded">
-                                                            ✓ Pesan 2 Terkirim
+                                                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md">
+                                                            Pesan 2 Terkirim
                                                         </span>
                                                     <?php endif; ?>
                                                 </div>
@@ -201,10 +203,11 @@
                                                 type="button" 
                                                 onclick="sendStepMessage(<?= $lead['id'] ?>, 1)" 
                                                 id="btn-step-<?= $lead['id'] ?>"
-                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm"
+                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-xs"
                                                 title="Kirim Pesan 1 sekarang & otomatis ubah status ke Dihubungi"
                                             >
-                                                <span>▶</span> Pesan 1
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                                <span>Pesan 1</span>
                                             </button>
 
                                         <?php elseif ($lastStep === 1): ?>
@@ -212,10 +215,11 @@
                                                 type="button" 
                                                 onclick="sendStepMessage(<?= $lead['id'] ?>, 2)" 
                                                 id="btn-step-<?= $lead['id'] ?>"
-                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm"
+                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold shadow-xs"
                                                 title="Kirim Pesan 2 (Penawaran Solusi)"
                                             >
-                                                <span>▶</span> Pesan 2
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                                <span>Pesan 2</span>
                                             </button>
 
                                         <?php elseif ($lastStep === 2): ?>
@@ -223,16 +227,18 @@
                                                 type="button" 
                                                 onclick="sendStepMessage(<?= $lead['id'] ?>, 3)" 
                                                 id="btn-step-<?= $lead['id'] ?>"
-                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold shadow-sm"
+                                                class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1.5 px-3 py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs"
                                                 title="Kirim Pesan 3 (Portofolio & CTA)"
                                             >
-                                                <span>▶</span> Pesan 3
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                                <span>Pesan 3</span>
                                             </button>
 
                                         <?php elseif ($lastStep === 3): ?>
                                             <?php if ($leadStatus === 'dihubungi' && !empty($lead['next_followup_at'])): ?>
-                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 1">
-                                                    <span>⏳ FU 1:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 1">
+                                                    <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    <span>FU 1:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
                                                 </span>
                                             <?php else: ?>
                                                 <span class="text-[11px] font-medium text-slate-500">Pesan 3 Selesai</span>
@@ -240,16 +246,18 @@
 
                                         <?php elseif ($lastStep === 4): ?>
                                             <?php if ($leadStatus === 'dihubungi' && !empty($lead['next_followup_at'])): ?>
-                                                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 2">
-                                                    <span>⏳ FU 2:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
+                                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 2">
+                                                    <svg class="w-3 h-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    <span>FU 2:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
                                                 </span>
                                             <?php else: ?>
                                                 <span class="text-[11px] font-medium text-slate-500">FU 1 Selesai</span>
                                             <?php endif; ?>
 
                                         <?php elseif ($lastStep >= 5): ?>
-                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-[11px] font-bold">
-                                                ✓ Drip Selesai
+                                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-[11px] font-semibold">
+                                                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                <span>Drip Selesai</span>
                                             </span>
                                         <?php endif; ?>
 
@@ -257,22 +265,22 @@
                                         <a 
                                             href="<?= $directWaUrl ?>" 
                                             target="_blank" 
-                                            class="btn-press min-w-[32px] min-h-[32px] inline-flex items-center justify-center text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition"
+                                            class="btn-press w-7 h-7 inline-flex items-center justify-center text-slate-400 hover:text-emerald-600 rounded-lg hover:bg-emerald-50 transition"
                                             title="Buka Chat WhatsApp Web"
                                             aria-label="Buka Chat WhatsApp Web"
                                         >
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
                                         </a>
 
                                         <!-- Delete Button -->
                                         <button 
                                             type="button" 
                                             onclick="deleteLead(<?= $lead['id'] ?>)" 
-                                            class="btn-press min-w-[32px] min-h-[32px] inline-flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition"
+                                            class="btn-press w-7 h-7 inline-flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition"
                                             title="Hapus Prospek"
                                             aria-label="Hapus Prospek"
                                         >
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
 
                                     </div>
@@ -361,21 +369,23 @@
                                         <button 
                                             type="button" 
                                             onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
-                                            class="btn-press flex-1 py-1 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs inline-flex items-center justify-center gap-1 transition shadow-xs"
+                                            class="btn-press flex-1 py-1.5 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs inline-flex items-center justify-center gap-1 transition shadow-2xs"
                                         >
-                                            <span>⚡</span> + Jadikan Trigger
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                            <span>+ Jadikan Trigger</span>
                                         </button>
                                         <?php if ((int)$lead['last_step_sent'] === 1): ?>
                                             <button 
                                                 type="button" 
                                                 onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
-                                                class="btn-press py-1 px-3 rounded-lg bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-semibold text-xs inline-flex items-center justify-center gap-1 transition"
+                                                class="btn-press py-1.5 px-3 rounded-lg bg-white hover:bg-amber-50 border border-amber-300 text-amber-900 font-semibold text-xs inline-flex items-center justify-center gap-1 transition shadow-2xs"
                                             >
-                                                <span>▶</span> Kirim Pesan 2
+                                                <svg class="w-3 h-3 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                                <span>Kirim Pesan 2</span>
                                             </button>
                                         <?php else: ?>
-                                            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-1 rounded-md">
-                                                ✓ Pesan 2 Terkirim
+                                            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-md">
+                                                Pesan 2 Terkirim
                                             </span>
                                         <?php endif; ?>
                                     </div>
@@ -391,10 +401,10 @@
                                     class="status-select-<?= $lead['id'] ?> w-full px-2 py-1.5 text-xs font-semibold rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:bg-white focus:border-emerald-600 outline-none"
                                     onchange="updateLeadStatus(<?= $lead['id'] ?>, this.value)"
                                 >
-                                    <option value="belum_dihubungi" <?= $leadStatus === 'belum_dihubungi' ? 'selected' : '' ?>>🟡 Belum Kontak</option>
-                                    <option value="dihubungi" <?= $leadStatus === 'dihubungi' ? 'selected' : '' ?>>🔵 Dihubungi</option>
-                                    <option value="deal" <?= $leadStatus === 'deal' ? 'selected' : '' ?>>🏆 Deal</option>
-                                    <option value="batal" <?= $leadStatus === 'batal' ? 'selected' : '' ?>>❌ Batal</option>
+                                    <option value="belum_dihubungi" <?= $leadStatus === 'belum_dihubungi' ? 'selected' : '' ?>>Belum Kontak</option>
+                                    <option value="dihubungi" <?= $leadStatus === 'dihubungi' ? 'selected' : '' ?>>Dihubungi</option>
+                                    <option value="deal" <?= $leadStatus === 'deal' ? 'selected' : '' ?>>Deal</option>
+                                    <option value="batal" <?= $leadStatus === 'batal' ? 'selected' : '' ?>>Batal</option>
                                 </select>
                             </div>
                             <div>
@@ -430,45 +440,51 @@
                                     <button 
                                         type="button" 
                                         onclick="sendStepMessage(<?= $lead['id'] ?>, 1)" 
-                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm"
+                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs"
                                     >
-                                        <span>▶</span> Pesan 1
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                        <span>Pesan 1</span>
                                     </button>
                                 <?php elseif ($lastStep === 1): ?>
                                     <button 
                                         type="button" 
                                         onclick="sendStepMessage(<?= $lead['id'] ?>, 2)" 
-                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm"
+                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs"
                                     >
-                                        <span>▶</span> Pesan 2
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                        <span>Pesan 2</span>
                                     </button>
                                 <?php elseif ($lastStep === 2): ?>
                                     <button 
                                         type="button" 
                                         onclick="sendStepMessage(<?= $lead['id'] ?>, 3)" 
-                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold shadow-sm"
+                                        class="btn-step-<?= $lead['id'] ?> btn-press inline-flex items-center gap-1 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-semibold shadow-xs"
                                     >
-                                        <span>▶</span> Pesan 3
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                        <span>Pesan 3</span>
                                     </button>
                                 <?php elseif ($lastStep === 3): ?>
                                     <?php if ($leadStatus === 'dihubungi' && !empty($lead['next_followup_at'])): ?>
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl text-[11px] font-semibold">
-                                            <span>⏳ FU 1:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl text-[11px] font-semibold">
+                                            <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span>FU 1:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
                                         </span>
                                     <?php else: ?>
                                         <span class="text-[11px] font-medium text-slate-500 px-2">Pesan 3 OK</span>
                                     <?php endif; ?>
                                 <?php elseif ($lastStep === 4): ?>
                                     <?php if ($leadStatus === 'dihubungi' && !empty($lead['next_followup_at'])): ?>
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-[11px] font-semibold">
-                                            <span>⏳ FU 2:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-xl text-[11px] font-semibold">
+                                            <svg class="w-3 h-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <span>FU 2:</span> <span class="font-mono"><?= date('d M H:i', strtotime($lead['next_followup_at'])) ?></span>
                                         </span>
                                     <?php else: ?>
                                         <span class="text-[11px] font-medium text-slate-500 px-2">FU 1 OK</span>
                                     <?php endif; ?>
                                 <?php elseif ($lastStep >= 5): ?>
-                                    <span class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-[11px] font-bold">
-                                        ✓ Drip Selesai
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-[11px] font-semibold">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <span>Drip Selesai</span>
                                     </span>
                                 <?php endif; ?>
 

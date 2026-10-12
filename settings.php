@@ -196,8 +196,9 @@ require_once __DIR__ . '/views/header.php';
                     <p class="text-xs text-slate-500 mt-1">Hubungkan server OneSender lokal / remote untuk mengirim pesan massal dan follow-up otomatis.</p>
                 </div>
                 <div class="flex items-center gap-2 self-start sm:self-auto">
-                    <button type="button" onclick="testConnection()" id="btn-test-conn" class="btn-press inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 text-xs font-semibold transition" style="min-height: 44px;">
-                        <span>⚡</span> Test Koneksi OneSender
+                    <button type="button" onclick="testConnection()" id="btn-test-conn" class="btn-press inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition shadow-xs">
+                        <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        <span>Test Koneksi OneSender</span>
                     </button>
                 </div>
             </div>
@@ -270,33 +271,36 @@ require_once __DIR__ . '/views/header.php';
                 $cronUrl = $protocol . $host . rtrim(dirname($_SERVER['REQUEST_URI'] ?? ''), '/') . '/cron/followup_scheduler.php';
             ?>
             <div class="pt-4 border-t border-slate-100">
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <div class="bg-slate-50 border border-slate-200/90 rounded-xl p-4 space-y-2.5">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                            <span>🌐</span> URL Cron Job Pihak Ketiga (cron-job.org / cPanel)
+                            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span>URL Cron Job Pihak Ketiga (cron-job.org / cPanel)</span>
                         </span>
                         <a href="cron/followup_scheduler.php" target="_blank" class="btn-press text-xs text-emerald-600 hover:text-emerald-700 font-semibold underline flex items-center gap-1">
-                            Buka / Tes Sekarang ↗
+                            <span>Buka / Tes</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         </a>
                     </div>
                     <p class="text-xs text-slate-500">
                         Pasang URL ini pada layanan cron job pihak ketiga dengan interval setiap <strong>5 atau 10 menit</strong>. Script ini otomatis memproses follow-up 1 dan follow-up 2.
                     </p>
-                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+                    <div class="flex items-center rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
                         <input 
                             type="text" 
                             id="cron_url_input" 
                             readonly 
                             value="<?= htmlspecialchars($cronUrl) ?>" 
-                            class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700 select-all outline-none truncate"
+                            class="flex-1 min-w-0 px-3.5 py-2 bg-transparent font-mono text-xs text-slate-700 select-all outline-none truncate"
                         >
                         <button 
                             type="button" 
                             onclick="copyCronUrl()" 
                             id="btn-copy-cron"
-                            class="btn-press px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition shadow-sm whitespace-nowrap"
+                            class="btn-press inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border-l border-slate-200 transition flex-shrink-0"
                         >
-                            Salin URL
+                            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            <span>Salin URL</span>
                         </button>
                     </div>
                 </div>
@@ -310,11 +314,13 @@ require_once __DIR__ . '/views/header.php';
                 <div class="bg-emerald-50/60 border border-emerald-200/80 rounded-xl p-4 space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                            <span>⚡</span> Webhook Masuk OneSender (Pesan Masuk Klien)
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            <span>Webhook Masuk OneSender (Pesan Masuk Klien)</span>
                         </span>
                         <div class="flex items-center gap-2">
                             <a href="test_webhook.php" class="btn-press text-xs text-emerald-700 hover:text-emerald-800 font-bold underline flex items-center gap-1">
-                                🧪 Buka Simulator ↗
+                                <span>Buka Simulator</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                             </a>
                             <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
                                 Inbound Webhook
@@ -324,21 +330,22 @@ require_once __DIR__ . '/views/header.php';
                     <p class="text-xs text-slate-600 leading-relaxed">
                         Pasang URL ini di dashboard <strong>OneSender &gt; Webhook &gt; Inbound Message</strong> agar setiap balasan klien dapat terbaca oleh sistem secara instan.
                     </p>
-                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <div class="flex items-center rounded-xl border border-emerald-200 bg-white overflow-hidden shadow-xs focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-100 transition">
                         <input 
                             type="text" 
                             id="webhook_url_input" 
                             readonly 
                             value="<?= htmlspecialchars($webhookUrl) ?>" 
-                            class="flex-1 min-w-0 px-3.5 py-2 rounded-xl bg-white border border-slate-200 font-mono text-xs text-slate-700 select-all outline-none truncate"
+                            class="flex-1 min-w-0 px-3.5 py-2 bg-transparent font-mono text-xs text-slate-700 select-all outline-none truncate"
                         >
                         <button 
                             type="button" 
                             onclick="copyWebhookUrl()" 
                             id="btn-copy-webhook"
-                            class="btn-press px-4 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition shadow-sm whitespace-nowrap"
+                            class="btn-press inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold border-l border-emerald-200 transition flex-shrink-0"
                         >
-                            Salin URL Webhook
+                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            <span>Salin URL</span>
                         </button>
                     </div>
                 </div>
@@ -405,46 +412,49 @@ require_once __DIR__ . '/views/header.php';
                     <label for="crm_api_key" class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">
                         CRM API Key (Kunci Akses Inbound)
                     </label>
-                    <div class="space-y-2">
-                        <input 
-                            type="text" 
-                            id="crm_api_key" 
-                            name="crm_api_key" 
-                            value="<?= htmlspecialchars($crmApiKey) ?>" 
-                            placeholder="Contoh: mls_key_xxxxxxxxxxxxxxxx" 
-                            class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
-                            style="min-height: 44px;"
-                        >
-                        <div class="grid grid-cols-3 gap-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <div class="relative flex-1 min-w-0">
+                            <input 
+                                type="text" 
+                                id="crm_api_key" 
+                                name="crm_api_key" 
+                                value="<?= htmlspecialchars($crmApiKey) ?>" 
+                                placeholder="Contoh: mls_key_xxxxxxxxxxxxxxxx" 
+                                class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 text-xs font-mono text-slate-900 placeholder-slate-400 transition outline-none"
+                            >
+                        </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
                             <button 
                                 type="button" 
                                 onclick="generateApiKey()" 
-                                class="btn-press py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 text-center flex items-center justify-center gap-1"
-                                style="min-height: 44px;"
+                                class="btn-press inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-200"
+                                title="Acak API Key baru"
                             >
-                                <span>🎲</span> Generate
+                                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                <span>Acak Kunci</span>
                             </button>
                             <button 
                                 type="button" 
                                 onclick="saveApiKeyInstant()" 
                                 id="btnSaveKeyInstant"
-                                class="btn-press py-2.5 px-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition shadow-sm text-center flex items-center justify-center gap-1"
-                                style="min-height: 44px;"
+                                class="btn-press inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition shadow-xs"
                             >
-                                <span>💾</span> Simpan
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                <span>Simpan Kunci</span>
                             </button>
                             <button 
                                 type="button" 
                                 onclick="copyApiKeyInstant()" 
-                                class="btn-press py-2.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition border border-slate-200 text-center flex items-center justify-center gap-1"
-                                style="min-height: 44px;"
+                                class="btn-press inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold transition border border-slate-200 shadow-xs"
+                                title="Salin ke Clipboard"
                             >
-                                <span>📋</span> Salin
+                                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                <span>Salin</span>
                             </button>
                         </div>
                     </div>
                     <span class="text-[11px] text-slate-500 mt-1.5 block font-medium">
-                        Klik <strong>"Simpan"</strong> agar API key langsung tersimpan ke database tanpa perlu submit form template di bawah.
+                        Klik <strong>"Simpan Kunci"</strong> agar API key langsung tersimpan ke database tanpa perlu submit form template di bawah.
                     </span>
                 </div>
 
@@ -472,7 +482,7 @@ require_once __DIR__ . '/views/header.php';
             const btn = document.getElementById('btnSaveKeyInstant');
             const key = document.getElementById('crm_api_key').value.trim();
             btn.disabled = true;
-            btn.textContent = 'Menyimpan...';
+            btn.innerHTML = '<span>Menyimpan...</span>';
 
             const formData = new FormData();
             formData.append('action', 'save_crm_api_key');
@@ -486,7 +496,7 @@ require_once __DIR__ . '/views/header.php';
                 const data = await res.json();
                 if (data.success) {
                     document.getElementById('crm_api_key').value = data.api_key;
-                    window.toast ? window.toast.success('✅ API Key berhasil disimpan permanen ke database!') : alert('API Key berhasil disimpan!');
+                    window.toast ? window.toast.success('API Key berhasil disimpan permanen ke database!') : alert('API Key berhasil disimpan!');
                 } else {
                     window.toast ? window.toast.error('Gagal menyimpan API Key.') : alert('Gagal.');
                 }
@@ -494,7 +504,7 @@ require_once __DIR__ . '/views/header.php';
                 window.toast ? window.toast.error('Error: ' + e.message) : alert('Error: ' + e.message);
             } finally {
                 btn.disabled = false;
-                btn.textContent = '💾 Simpan Kunci';
+                btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>Simpan Kunci</span>';
             }
         }
 
@@ -573,43 +583,51 @@ require_once __DIR__ . '/views/header.php';
             <?php endif; ?>
 
             <!-- Tab Langkah Pesan (Segmented Control with Touch-friendly Scroll) -->
-            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-100 border border-slate-200/80 gap-1" style="-webkit-overflow-scrolling: touch;">
-                <button type="button" onclick="showStepTab(1)" id="tab-btn-1" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-bold rounded-lg transition bg-white text-slate-900 shadow-sm border border-slate-200 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
-                    1️⃣ Pesan 1 (Kirim Grup)
+            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-100/90 border border-slate-200/80 gap-1" style="-webkit-overflow-scrolling: touch;">
+                <button type="button" onclick="showStepTab(1)" id="tab-btn-1" class="step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition bg-white text-slate-900 shadow-xs border border-slate-200 whitespace-nowrap flex-shrink-0">
+                    <span id="tab-badge-1" class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center justify-center">1</span>
+                    <span>Pesan 1 (Kirim Grup)</span>
                 </button>
-                <button type="button" onclick="showStepTab(2)" id="tab-btn-2" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
-                    2️⃣ Pesan 2 (Solusi)
+                <button type="button" onclick="showStepTab(2)" id="tab-btn-2" class="step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-white/60 whitespace-nowrap flex-shrink-0">
+                    <span id="tab-badge-2" class="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">2</span>
+                    <span>Pesan 2 (Solusi)</span>
                 </button>
-                <button type="button" onclick="showStepTab(3)" id="tab-btn-3" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
-                    3️⃣ Pesan 3 (CTA Portofolio)
+                <button type="button" onclick="showStepTab(3)" id="tab-btn-3" class="step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-white/60 whitespace-nowrap flex-shrink-0">
+                    <span id="tab-badge-3" class="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">3</span>
+                    <span>Pesan 3 (CTA Portofolio)</span>
                 </button>
-                <button type="button" onclick="showStepTab(4)" id="tab-btn-4" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
-                    4️⃣ Follow-up 1
+                <button type="button" onclick="showStepTab(4)" id="tab-btn-4" class="step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-white/60 whitespace-nowrap flex-shrink-0">
+                    <span id="tab-badge-4" class="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">4</span>
+                    <span>Follow-up 1</span>
                 </button>
-                <button type="button" onclick="showStepTab(5)" id="tab-btn-5" class="step-tab-btn btn-press px-3.5 py-2.5 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 whitespace-nowrap flex-shrink-0" style="min-height: 42px;">
-                    5️⃣ Follow-up 2
+                <button type="button" onclick="showStepTab(5)" id="tab-btn-5" class="step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-white/60 whitespace-nowrap flex-shrink-0">
+                    <span id="tab-badge-5" class="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center">5</span>
+                    <span>Follow-up 2</span>
                 </button>
             </div>
 
             <!-- Dynamic Tag Buttons -->
-            <div class="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                <span class="text-[11px] font-bold text-slate-500 mr-2 uppercase tracking-wider">📌 Sisipkan Tag:</span>
-                <button type="button" onclick="insertTag('[waktu]')" class="btn-press px-2.5 py-1 bg-white hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 rounded-lg text-xs font-mono font-bold text-emerald-600 transition shadow-sm" title="pagi / siang / sore / malam otomatis">
-                    [waktu] <span class="text-[10px] text-slate-400 font-normal">(pagi/siang/sore/malam)</span>
+            <div class="flex flex-wrap items-center gap-1.5 p-3 bg-slate-50 rounded-xl border border-slate-200/90">
+                <span class="text-[11px] font-bold text-slate-500 mr-1.5 uppercase tracking-wider flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                    <span>Tag:</span>
+                </span>
+                <button type="button" onclick="insertTag('[waktu]')" class="btn-press px-2.5 py-1 bg-white hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 rounded-lg text-xs font-mono font-semibold text-emerald-600 transition shadow-2xs" title="pagi / siang / sore / malam otomatis">
+                    [waktu] <span class="text-[10px] text-slate-400 font-normal">(salam dinamis)</span>
                 </button>
-                <button type="button" onclick="insertTag('[nama_usaha]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-sm">
+                <button type="button" onclick="insertTag('[nama_usaha]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-2xs">
                     [nama_usaha]
                 </button>
-                <button type="button" onclick="insertTag('[kategori]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-sm">
+                <button type="button" onclick="insertTag('[kategori]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-2xs">
                     [kategori]
                 </button>
-                <button type="button" onclick="insertTag('[kota]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-sm">
+                <button type="button" onclick="insertTag('[kota]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-2xs">
                     [kota]
                 </button>
-                <button type="button" onclick="insertTag('[alamat]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-sm">
+                <button type="button" onclick="insertTag('[alamat]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-2xs">
                     [alamat]
                 </button>
-                <button type="button" onclick="insertTag('[rating]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-sm">
+                <button type="button" onclick="insertTag('[rating]')" class="btn-press px-2.5 py-1 bg-white hover:bg-slate-100 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-mono font-medium text-slate-700 transition shadow-2xs">
                     [rating]
                 </button>
             </div>
@@ -698,7 +716,7 @@ require_once __DIR__ . '/views/header.php';
         </div>
 
         <div class="flex flex-col sm:flex-row justify-end pt-2 pb-6">
-            <button type="submit" class="btn-press w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-xs shadow-md shadow-emerald-600/20 transition" style="min-height: 48px;">
+            <button type="submit" class="btn-press w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                 <span>Simpan Semua Pengaturan &amp; Template</span>
             </button>
@@ -723,12 +741,15 @@ function showStepTab(step) {
     for (let i = 1; i <= 5; i++) {
         const pane = document.getElementById('step-pane-' + i);
         const tabBtn = document.getElementById('tab-btn-' + i);
+        const badge = document.getElementById('tab-badge-' + i);
         if (i === step) {
             pane.classList.remove('hidden');
-            tabBtn.className = 'step-tab-btn btn-press px-3.5 py-2 text-xs font-bold rounded-lg transition bg-white text-slate-900 shadow-sm border border-slate-200';
+            tabBtn.className = 'step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition bg-white text-slate-900 shadow-xs border border-slate-200 whitespace-nowrap flex-shrink-0';
+            if (badge) badge.className = 'w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center justify-center';
         } else {
             pane.classList.add('hidden');
-            tabBtn.className = 'step-tab-btn btn-press px-3.5 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-slate-200/60';
+            tabBtn.className = 'step-tab-btn btn-press inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg transition text-slate-600 hover:text-slate-900 hover:bg-white/60 whitespace-nowrap flex-shrink-0';
+            if (badge) badge.className = 'w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-bold flex items-center justify-center';
         }
     }
     updatePreview(step);
@@ -789,8 +810,10 @@ function testConnection() {
     const apiUrl = document.getElementById('onesender_api_url').value;
     const token = document.getElementById('onesender_token').value;
 
+    const normalBtnHtml = '<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg><span>Test Koneksi OneSender</span>';
+
     btn.disabled = true;
-    btn.innerHTML = '<span>⏳</span> Menguji...';
+    btn.innerHTML = '<svg class="w-3.5 h-3.5 text-slate-400 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Menguji...</span>';
     resultBox.classList.remove('hidden', 'bg-emerald-50', 'text-emerald-800', 'border-emerald-200', 'bg-rose-50', 'text-rose-800', 'border-rose-200', 'bg-amber-50', 'text-amber-800', 'border-amber-200');
     resultBox.classList.add('bg-slate-50', 'text-slate-700', 'border', 'border-slate-200');
     resultBox.textContent = 'Menghubungi endpoint ' + apiUrl + '...';
@@ -806,44 +829,45 @@ function testConnection() {
     .then(res => res.json())
     .then(data => {
         btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Test Koneksi OneSender';
+        btn.innerHTML = normalBtnHtml;
         resultBox.classList.remove('bg-slate-50', 'text-slate-700');
         if (data.success) {
             resultBox.classList.add('bg-emerald-50', 'text-emerald-800', 'border', 'border-emerald-200');
-            resultBox.innerHTML = '<strong>✅ Terhubung!</strong> ' + (data.message || 'Server OneSender aktif.');
+            resultBox.innerHTML = '<strong>Terhubung!</strong> ' + (data.message || 'Server OneSender aktif.');
             window.toast.success('Koneksi OneSender berhasil terhubung!');
         } else {
             resultBox.classList.add('bg-amber-50', 'text-amber-800', 'border', 'border-amber-200');
-            resultBox.innerHTML = '<strong>⚠️ Perhatian:</strong> ' + (data.message || 'Gagal menghubungi server OneSender.');
+            resultBox.innerHTML = '<strong>Perhatian:</strong> ' + (data.message || 'Gagal menghubungi server OneSender.');
             window.toast.error('Gagal terhubung ke OneSender');
         }
     })
     .catch(err => {
         btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Test Koneksi OneSender';
+        btn.innerHTML = normalBtnHtml;
         resultBox.classList.remove('bg-slate-50', 'text-slate-700');
         resultBox.classList.add('bg-rose-50', 'text-rose-800', 'border', 'border-rose-200');
-        resultBox.innerHTML = '<strong>❌ Error:</strong> ' + err.message;
+        resultBox.innerHTML = '<strong>Error:</strong> ' + err.message;
         window.toast.error('Kesalahan koneksi: ' + err.message);
     });
 }
-
-
 
 function copyCronUrl() {
     const input = document.getElementById('cron_url_input');
     const btn = document.getElementById('btn-copy-cron');
     input.select();
     input.setSelectionRange(0, 99999);
+    const origHtml = '<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg><span>Salin URL</span>';
+    const copiedHtml = '<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-emerald-700">Tersalin!</span>';
+
     navigator.clipboard.writeText(input.value).then(() => {
         window.toast.success('URL Cron Job berhasil disalin!');
-        btn.textContent = 'Tersalin! ✓';
-        setTimeout(() => { btn.textContent = 'Salin URL'; }, 2000);
+        btn.innerHTML = copiedHtml;
+        setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
     }).catch(() => {
         document.execCommand('copy');
         window.toast.success('URL Cron Job berhasil disalin!');
-        btn.textContent = 'Tersalin! ✓';
-        setTimeout(() => { btn.textContent = 'Salin URL'; }, 2000);
+        btn.innerHTML = copiedHtml;
+        setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
     });
 }
 
@@ -852,15 +876,18 @@ function copyWebhookUrl() {
     const btn = document.getElementById('btn-copy-webhook');
     input.select();
     input.setSelectionRange(0, 99999);
+    const origHtml = '<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg><span>Salin URL</span>';
+    const copiedHtml = '<svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span class="text-emerald-700">Tersalin!</span>';
+
     navigator.clipboard.writeText(input.value).then(() => {
         window.toast.success('URL Webhook berhasil disalin!');
-        btn.textContent = 'Tersalin! ✓';
-        setTimeout(() => { btn.textContent = 'Salin URL Webhook'; }, 2000);
+        btn.innerHTML = copiedHtml;
+        setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
     }).catch(() => {
         document.execCommand('copy');
         window.toast.success('URL Webhook berhasil disalin!');
-        btn.textContent = 'Tersalin! ✓';
-        setTimeout(() => { btn.textContent = 'Salin URL Webhook'; }, 2000);
+        btn.innerHTML = copiedHtml;
+        setTimeout(() => { btn.innerHTML = origHtml; }, 2000);
     });
 }
 </script>

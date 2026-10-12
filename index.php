@@ -107,15 +107,15 @@ function renderGroupBannerHtml($groupInfo, $uncontactedCount) {
             </p>
         </div>
 
-        <div class="flex items-center gap-2 bg-white p-2 rounded-xl border border-emerald-200 w-full md:w-auto shadow-sm">
-            <span class="text-xs text-slate-600 pl-1 font-medium whitespace-nowrap">Kirim:</span>
+        <div class="flex items-center gap-2 bg-white p-1.5 rounded-xl border border-emerald-200 w-full md:w-auto shadow-xs">
+            <span class="text-xs text-slate-600 pl-2 font-medium whitespace-nowrap">Kirim:</span>
             <input 
                 type="number" 
                 id="batch-limit-input" 
                 min="1" 
                 max="<?= max(1, $uncontactedCount) ?>" 
                 value="<?= min(10, max(1, $uncontactedCount)) ?>" 
-                class="w-16 px-2 py-1.5 rounded-lg bg-slate-50 text-slate-900 text-xs font-mono font-bold text-center border border-slate-200 focus:border-emerald-600 focus:bg-white focus:outline-none"
+                class="w-16 h-8 px-2 rounded-lg bg-slate-50 text-slate-900 text-xs font-mono font-bold text-center border border-slate-200 focus:border-emerald-600 focus:bg-white focus:outline-none"
             >
             <span class="text-xs text-slate-600 pr-1 font-medium whitespace-nowrap">kontak</span>
             <button 
@@ -123,9 +123,10 @@ function renderGroupBannerHtml($groupInfo, $uncontactedCount) {
                 onclick="sendBatchMessage1(<?= $groupInfo['id'] ?>)" 
                 id="btn-batch-send"
                 <?= $uncontactedCount === 0 ? 'disabled' : '' ?>
-                class="btn-press flex-1 md:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-lg font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition"
+                class="btn-press flex-1 md:flex-none h-8 inline-flex items-center justify-center gap-1.5 px-3.5 rounded-lg font-semibold text-xs bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-40 disabled:cursor-not-allowed shadow-xs transition"
             >
-                <span>🚀</span> Kirim Pesan 1 (Massal)
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                <span>Kirim Pesan 1 Massal</span>
             </button>
         </div>
     </div>
@@ -239,9 +240,10 @@ require_once __DIR__ . '/views/header.php';
                 type="button" 
                 onclick="runFollowupQueue()" 
                 id="btn-run-fu"
-                class="mt-2 text-[11px] font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-300 rounded-xl py-1.5 px-3 btn-press flex items-center justify-center gap-1.5 transition"
+                class="mt-2 text-[11px] font-semibold text-purple-700 bg-purple-100 hover:bg-purple-200 border border-purple-200 rounded-xl py-1.5 px-3 btn-press flex items-center justify-center gap-1.5 transition shadow-2xs"
             >
-                <span>⚡</span> Jalankan FU
+                <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <span>Jalankan FU</span>
             </button>
         </div>
     </div>
@@ -252,7 +254,7 @@ require_once __DIR__ . '/views/header.php';
     </div>
 
     <!-- Filter & Action Bar: Collapsible and Fluid on Mobile -->
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-3.5 sm:p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-surface p-3 sm:p-3.5 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-3">
         
         <!-- Search & Filter Form (Live AJAX Auto Filter) -->
         <form id="filterForm" onsubmit="event.preventDefault(); return false;" class="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-2 w-full md:w-auto flex-1">
@@ -263,7 +265,7 @@ require_once __DIR__ . '/views/header.php';
                     name="q" 
                     value="<?= htmlspecialchars($searchQuery) ?>" 
                     placeholder="Cari nama usaha, kota, atau nomor WA..." 
-                    class="w-full pl-9 pr-9 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 text-xs text-slate-900 placeholder-slate-400 transition outline-none"
+                    class="w-full h-9 pl-9 pr-9 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 text-xs text-slate-900 placeholder-slate-400 transition outline-none"
                     autocomplete="off"
                 >
                 <!-- Normal Search Icon -->
@@ -292,19 +294,19 @@ require_once __DIR__ . '/views/header.php';
                 <select 
                     id="statusSelect"
                     name="status" 
-                    class="w-full sm:w-auto px-2.5 sm:px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 text-xs text-slate-700 font-medium transition outline-none cursor-pointer"
+                    class="w-full sm:w-auto h-9 px-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 text-xs text-slate-700 font-medium transition outline-none cursor-pointer"
                 >
                     <option value="">Semua Status</option>
-                    <option value="belum_dihubungi" <?= $statusFilter === 'belum_dihubungi' ? 'selected' : '' ?>>🟡 Belum Kontak</option>
-                    <option value="dihubungi" <?= $statusFilter === 'dihubungi' ? 'selected' : '' ?>>🔵 Dihubungi</option>
-                    <option value="deal" <?= $statusFilter === 'deal' ? 'selected' : '' ?>>🏆 Deal</option>
-                    <option value="batal" <?= $statusFilter === 'batal' ? 'selected' : '' ?>>❌ Batal</option>
+                    <option value="belum_dihubungi" <?= $statusFilter === 'belum_dihubungi' ? 'selected' : '' ?>>Belum Kontak</option>
+                    <option value="dihubungi" <?= $statusFilter === 'dihubungi' ? 'selected' : '' ?>>Dihubungi</option>
+                    <option value="deal" <?= $statusFilter === 'deal' ? 'selected' : '' ?>>Deal</option>
+                    <option value="batal" <?= $statusFilter === 'batal' ? 'selected' : '' ?>>Batal</option>
                 </select>
 
                 <select 
                     id="groupSelect"
                     name="group_id" 
-                    class="w-full sm:w-auto px-2.5 sm:px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 text-xs text-slate-700 font-medium transition outline-none truncate cursor-pointer"
+                    class="w-full sm:w-auto h-9 px-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 text-xs text-slate-700 font-medium transition outline-none truncate cursor-pointer"
                 >
                     <option value="">Semua Grup</option>
                     <option value="none" <?= $groupFilter === 'none' ? 'selected' : '' ?>>-- Tanpa Grup (<?= $noGroupCount ?>) --</option>
@@ -321,25 +323,25 @@ require_once __DIR__ . '/views/header.php';
                 type="button" 
                 id="resetFilterBtn" 
                 onclick="resetAllFilters()"
-                class="<?= (!empty($searchQuery) || !empty($statusFilter) || $groupFilter !== '') ? '' : 'hidden' ?> px-3 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition inline-flex items-center gap-1"
+                class="<?= (!empty($searchQuery) || !empty($statusFilter) || $groupFilter !== '') ? '' : 'hidden' ?> h-9 px-2.5 text-xs font-semibold text-slate-500 hover:text-slate-900 transition inline-flex items-center gap-1"
             >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Reset
+                <span>Reset</span>
             </button>
         </form>
 
         <!-- Right Action Buttons -->
-        <div class="flex items-center gap-2 w-full md:w-auto justify-between sm:justify-end border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-100">
+        <div class="flex items-center gap-2 w-full md:w-auto justify-between sm:justify-end border-t md:border-t-0 pt-2.5 md:pt-0 border-slate-100 flex-shrink-0">
             <!-- Tombol Kirim Pesan 1 Massal untuk prospek yang dicentang -->
             <button 
                 type="button" 
                 id="bulkSendBtn"
                 onclick="executeBulkSendMessage1()"
-                class="hidden btn-press inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+                class="hidden btn-press h-9 inline-flex items-center gap-1.5 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-xs"
                 title="Kirim Pesan 1 ke prospek terpilih yang belum dihubungi"
             >
-                <span>🚀</span>
-                Kirim Pesan 1 (<span id="selectedSendCount">0</span>)
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                <span>Kirim Pesan 1 (<span id="selectedSendCount">0</span>)</span>
             </button>
 
             <!-- Tombol Hapus prospek yang dicentang -->
@@ -347,26 +349,26 @@ require_once __DIR__ . '/views/header.php';
                 type="button" 
                 id="bulkDeleteBtn"
                 onclick="executeBulkDelete()"
-                class="hidden btn-press inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold text-xs transition"
+                class="hidden btn-press h-9 inline-flex items-center gap-1.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold text-xs transition"
             >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                Hapus (<span id="selectedCount">0</span>)
+                <span>Hapus (<span id="selectedCount">0</span>)</span>
             </button>
             <a 
                 id="exportCsvBtn"
                 href="actions/export.php?status=<?= urlencode($statusFilter) ?>&group_id=<?= urlencode($groupFilter) ?>&q=<?= urlencode($searchQuery) ?>" 
-                class="btn-press flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition shadow-sm"
+                class="btn-press h-9 flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition shadow-xs"
                 title="Download data sebagai file CSV / Excel"
             >
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                Export CSV
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Export CSV</span>
             </a>
             <a 
                 href="search.php" 
-                class="btn-press flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-sm"
+                class="btn-press h-9 flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition shadow-xs"
             >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                Scrape Baru
+                <span>Scrape Baru</span>
             </a>
         </div>
     </div>
@@ -381,15 +383,20 @@ require_once __DIR__ . '/views/header.php';
 <!-- Modal Edit Catatan (Emil Kowalski: Centered, scale(0.95) to 1.0, clean light card) -->
 <div id="noteModal" onclick="if(event.target === this) closeNoteModal()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 animate-modal-in mx-2">
-        <div>
-            <h3 class="text-base font-bold text-slate-900 tracking-tight" id="modalLeadName">Edit Catatan Prospek</h3>
-            <p class="text-xs text-slate-500 mt-1">Tulis riwayat obrolan, respon prospek, atau status penawaran.</p>
+        <div class="flex items-start justify-between">
+            <div>
+                <h3 class="text-base font-bold text-slate-900 tracking-tight" id="modalLeadName">Edit Catatan Prospek</h3>
+                <p class="text-xs text-slate-500 mt-1">Tulis riwayat obrolan, respon prospek, atau status penawaran.</p>
+            </div>
+            <button type="button" onclick="closeNoteModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
         <input type="hidden" id="modalLeadId">
         <textarea id="modalNoteText" rows="4" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 text-xs text-slate-900 placeholder-slate-400 outline-none transition" placeholder="Tulis catatan di sini..."></textarea>
         <div class="flex justify-end gap-2 pt-2">
             <button type="button" onclick="closeNoteModal()" class="btn-press px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200">Batal</button>
-            <button type="button" onclick="saveNote()" class="btn-press px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">Simpan Catatan</button>
+            <button type="button" onclick="saveNote()" class="btn-press px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">Simpan Catatan</button>
         </div>
     </div>
 </div>
@@ -397,14 +404,21 @@ require_once __DIR__ . '/views/header.php';
 <!-- Modal Jadikan Trigger Kata Kunci Pesan 2 -->
 <div id="addTriggerModal" onclick="if(event.target === this) closeAddTriggerModal()" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl space-y-4 animate-modal-in mx-2">
-        <div>
-            <div class="flex items-center gap-2">
-                <span class="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-sm font-bold">⚡</span>
-                <h3 class="text-base font-bold text-slate-900 tracking-tight">Jadikan Trigger Pesan 2</h3>
+        <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </span>
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 tracking-tight">Jadikan Trigger Pesan 2</h3>
+                    <p class="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                        Jika ada klien membalas dengan kata ini, sistem otomatis mengirim <strong>Pesan 2</strong>.
+                    </p>
+                </div>
             </div>
-            <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Kata kunci ini akan disimpan ke pengaturan sistem. Jika ada klien membalas dengan kata ini, sistem akan otomatis mengirim <strong>Pesan 2</strong>.
-            </p>
+            <button type="button" onclick="closeAddTriggerModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
         <input type="hidden" id="triggerLeadId">
@@ -423,7 +437,7 @@ require_once __DIR__ . '/views/header.php';
         <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
             <button type="button" onclick="closeAddTriggerModal()" class="btn-press px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 order-3 sm:order-1">Batal</button>
             <button type="button" id="btnSaveTriggerOnly" onclick="submitAddTrigger(false)" class="btn-press px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 order-2 sm:order-2">Simpan Saja</button>
-            <button type="button" id="btnSaveTriggerAndSend" onclick="submitAddTrigger(true)" class="btn-press px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm order-1 sm:order-3">Simpan & Kirim Pesan 2</button>
+            <button type="button" id="btnSaveTriggerAndSend" onclick="submitAddTrigger(true)" class="btn-press px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs order-1 sm:order-3">Simpan &amp; Kirim Pesan 2</button>
         </div>
     </div>
 </div>
@@ -437,7 +451,7 @@ function sendStepMessage(leadId, stepNumber) {
     buttons.forEach(b => {
         b.disabled = true;
         b.dataset.origHtml = b.innerHTML;
-        b.innerHTML = '<span>⏳</span> Kirim...';
+        b.innerHTML = '<svg class="w-3.5 h-3.5 text-white animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>Kirim...</span>';
     });
 
     const formData = new URLSearchParams();
@@ -461,13 +475,13 @@ function sendStepMessage(leadId, stepNumber) {
             buttons.forEach(btn => {
                 if (data.next_step === 2) {
                     btn.disabled = false;
-                    btn.className = `btn-step-${leadId} btn-press inline-flex items-center gap-1 px-3 py-1.5 sm:py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl sm:rounded-lg text-xs font-bold shadow-sm`;
-                    btn.innerHTML = '<span>▶</span> Pesan 2';
+                    btn.className = `btn-step-${leadId} btn-press inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl sm:rounded-lg text-xs font-semibold shadow-xs`;
+                    btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg><span>Pesan 2</span>';
                     btn.setAttribute('onclick', `sendStepMessage(${leadId}, 2)`);
                 } else if (data.next_step === 3) {
                     btn.disabled = false;
-                    btn.className = `btn-step-${leadId} btn-press inline-flex items-center gap-1 px-3 py-1.5 sm:py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-xl sm:rounded-lg text-xs font-bold shadow-sm`;
-                    btn.innerHTML = '<span>▶</span> Pesan 3';
+                    btn.className = `btn-step-${leadId} btn-press inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-1 bg-sky-600 hover:bg-sky-700 text-white rounded-xl sm:rounded-lg text-xs font-semibold shadow-xs`;
+                    btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg><span>Pesan 3</span>';
                     btn.setAttribute('onclick', `sendStepMessage(${leadId}, 3)`);
                 } else if (data.next_step >= 4) {
                     let fuLabel = 'Terjadwal';
@@ -475,7 +489,7 @@ function sendStepMessage(leadId, stepNumber) {
                         const d = new Date(data.next_followup_at.replace(/-/g, "/"));
                         fuLabel = `${d.getDate()} ${d.toLocaleString('id-ID', { month: 'short' })} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
                     }
-                    btn.outerHTML = `<span class="inline-flex items-center gap-1 px-2.5 py-1.5 sm:py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl sm:rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 1"><span>⏳ FU 1:</span> <span class="font-mono">${fuLabel}</span></span>`;
+                    btn.outerHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-xl sm:rounded-lg text-[11px] font-semibold" title="Jadwal otomatis Follow-up 1"><svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>FU 1:</span> <span class="font-mono">${fuLabel}</span></span>`;
                 }
             });
         } else {
