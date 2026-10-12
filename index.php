@@ -1,5 +1,9 @@
 <?php
 // index.php
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/services/OneSenderService.php';
 
@@ -801,7 +805,8 @@ function fetchFilteredLeads(page = 1, updateUrl = true) {
         page: page,
         q: q,
         status: status,
-        group_id: groupId
+        group_id: groupId,
+        _t: Date.now()
     });
 
     fetch('index.php?' + fetchParams.toString(), {

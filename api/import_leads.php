@@ -102,6 +102,7 @@ try {
                 search_keyword = COALESCE(VALUES(search_keyword), search_keyword),
                 address = VALUES(address),
                 city = COALESCE(VALUES(city), city),
+                phone_raw = VALUES(phone_raw),
                 rating = VALUES(rating),
                 user_ratings_total = VALUES(user_ratings_total),
                 updated_at = NOW()
@@ -116,6 +117,7 @@ try {
                 group_id = COALESCE(VALUES(group_id), group_id),
                 address = VALUES(address),
                 city = COALESCE(VALUES(city), city),
+                phone_raw = VALUES(phone_raw),
                 rating = VALUES(rating),
                 user_ratings_total = VALUES(user_ratings_total),
                 updated_at = NOW()
@@ -123,7 +125,6 @@ try {
     }
 
     $stmt = $db->prepare($insertSql);
-    $checkStmt = $db->prepare("SELECT id FROM leads WHERE phone_wa = ? LIMIT 1");
 
     $newlyInserted = 0;
     $updatedExisting = 0;
@@ -139,17 +140,23 @@ try {
             continue;
         }
 
-        $placeId = !empty($lead['place_id']) ? $lead['place_id'] : 'pl_' . md5(($lead['name'] ?? '') . $phoneWa);
-        $name = trim($lead['name'] ?? 'Tanpa Nama');
-        $category = trim($lead['category'] ?? 'Bisnis Lokal');
+        $phoneWa = mb_substr($phoneWa, 0, 30);
+        $rawPlaceId = !empty($lead['place_id']) ? trim($lead['place_id']) : '';
+        if (empty($rawPlaceId) || $rawPlaceId === 'undefined') {
+            $placeId = 'pl_' . md5(($lead['name'] ?? '') . '_' . $phoneWa);
+        } else {
+            // Partisi place_id dengan akhiran nomor telepon agar satu tempat dengan nomor WA berbeda dapat tersimpan
+            $placeId = $rawPlaceId . '_' . substr($phoneWa, -6);
+        }
+
+        $placeId = mb_substr($placeId, 0, 255);
+        $name = mb_substr(trim($lead['name'] ?? 'Tanpa Nama'), 0, 255);
+        $category = mb_substr(trim($lead['category'] ?? 'Bisnis Lokal'), 0, 150);
         $address = trim($lead['address'] ?? '');
-        $city = !empty($lead['city']) ? trim($lead['city']) : $searchLocation;
-        $phoneRaw = trim($lead['phone_raw'] ?? ($lead['phone'] ?? $phoneWa));
+        $city = mb_substr(!empty($lead['city']) ? trim($lead['city']) : $searchLocation, 0, 100);
+        $phoneRaw = mb_substr(trim($lead['phone_raw'] ?? ($lead['phone'] ?? $phoneWa)), 0, 50);
         $rating = (float)($lead['rating'] ?? 0.0);
         $reviews = (int)($lead['user_ratings_total'] ?? ($lead['reviews'] ?? 0));
-
-        $checkStmt->execute([$phoneWa]);
-        $exists = $checkStmt->fetch();
 
         $params = [
             ':place_id'           => $placeId,
@@ -165,15 +172,15 @@ try {
         ];
 
         if ($hasSearchKeywordCol) {
-            $params[':search_keyword'] = $searchKeyword;
+            $params[':search_keyword'] = mb_substr($searchKeyword, 0, 150);
         }
 
         $stmt->execute($params);
-
-        if ($exists) {
-            $updatedExisting++;
-        } else {
+        $affected = $stmt->rowCount();
+        if ($affected === 1) {
             $newlyInserted++;
+        } else {
+            $updatedExisting++;
         }
     }
 
