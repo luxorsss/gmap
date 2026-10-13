@@ -92,16 +92,16 @@
                                             </div>
                                             <?php if ($lead['status'] === 'dihubungi'): ?>
                                                 <div class="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-amber-200/70">
-                                                    <button 
-                                                        type="button" 
-                                                        onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
-                                                        class="btn-press px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-[11px] inline-flex items-center gap-1 transition shadow-2xs"
-                                                        title="Jadikan kata kunci trigger dan otomatis kirim Pesan 2"
-                                                    >
-                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                                        <span>+ Jadikan Trigger</span>
-                                                    </button>
                                                     <?php if ((int)$lead['last_step_sent'] === 1): ?>
+                                                        <button 
+                                                            type="button" 
+                                                            onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
+                                                            class="btn-press px-2.5 py-1 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-[11px] inline-flex items-center gap-1 transition shadow-2xs"
+                                                            title="Jadikan kata kunci trigger dan otomatis kirim Pesan 2"
+                                                        >
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                            <span>+ Jadikan Trigger</span>
+                                                        </button>
                                                         <button 
                                                             type="button" 
                                                             onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
@@ -112,8 +112,9 @@
                                                             <span>Kirim Pesan 2</span>
                                                         </button>
                                                     <?php else: ?>
-                                                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md">
-                                                            Pesan 2 Terkirim
+                                                        <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-md inline-flex items-center gap-1">
+                                                            <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                            <span>Pesan 2 Terkirim</span>
                                                         </span>
                                                     <?php endif; ?>
                                                 </div>
@@ -366,15 +367,15 @@
                                 </div>
                                 <?php if ($lead['status'] === 'dihubungi'): ?>
                                     <div class="flex items-center gap-2 mt-2 pt-2 border-t border-amber-200/70">
-                                        <button 
-                                            type="button" 
-                                            onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
-                                            class="btn-press flex-1 py-1.5 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs inline-flex items-center justify-center gap-1 transition shadow-2xs"
-                                        >
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                                            <span>+ Jadikan Trigger</span>
-                                        </button>
                                         <?php if ((int)$lead['last_step_sent'] === 1): ?>
+                                            <button 
+                                                type="button" 
+                                                onclick="openAddTriggerModal(<?= $lead['id'] ?>, <?= htmlspecialchars(json_encode($lead['last_incoming_message']), ENT_QUOTES, 'UTF-8') ?>)"
+                                                class="btn-press flex-1 py-1.5 px-2.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs inline-flex items-center justify-center gap-1 transition shadow-2xs"
+                                            >
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                                <span>+ Jadikan Trigger</span>
+                                            </button>
                                             <button 
                                                 type="button" 
                                                 onclick="sendStepMessage(<?= $lead['id'] ?>, 2)"
@@ -384,8 +385,9 @@
                                                 <span>Kirim Pesan 2</span>
                                             </button>
                                         <?php else: ?>
-                                            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-md">
-                                                Pesan 2 Terkirim
+                                            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/80 px-2.5 py-1 rounded-md inline-flex items-center gap-1">
+                                                <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                <span>Pesan 2 Terkirim</span>
                                             </span>
                                         <?php endif; ?>
                                     </div>
